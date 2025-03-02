@@ -12,13 +12,17 @@
     "./expo": {
       "default": "./expo.js"
     },
+    "./react-library": {
+      "default": "./react-library.js"
+    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
   "files": [
     "next.js",
     "nest.js",
-    "expo.js"
+    "expo.js",
+    "react-library.js"
   ],
   "peerDependencies": {
     "eslint": "^7.23.0 || ^8.0.0 || ^9.0.0",
@@ -27,14 +31,18 @@
   "dependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "eslint-config-next": "14.0.4",
+    "eslint-config-next": "^15.2.0",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-config-expo": "^8.0.1",
     "eslint-plugin-react-compiler": "^19.0.0-beta-e1e972c-20250221",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-native": "^5.0.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "next": "^14.0.4",
     "typescript-eslint": "^8.20.0"
   },
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {}
+  }
 }

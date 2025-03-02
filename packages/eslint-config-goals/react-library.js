@@ -1,17 +1,34 @@
 const eslint = require('@eslint/js');
 const prettierConfig = require('eslint-plugin-prettier/recommended');
+const reactCompiler = require('eslint-plugin-react-compiler');
+const reactPlugin = require('eslint-plugin-react');
+const reactHooksPlugin = require('eslint-plugin-react-hooks');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
-const compat = require('./compat');
+const reactNative = require('eslint-plugin-react-native');
+const tseslint = require('typescript-eslint');
 
 /** @type {import('eslint').Linter.Config[]} */
-module.exports = [
+module.exports = tseslint.config(
   eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   prettierConfig,
-  ...compat.extends('next/core-web-vitals'),
-  ...compat.extends('next/typescript'),
+  {
+    languageOptions: {
+      ecmaVersion: 5,
+      sourceType: 'module',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: __dirname,
+      },
+    },
+  },
   {
     plugins: {
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
       'simple-import-sort': simpleImportSort,
+      'react-compiler': reactCompiler,
+      'react-native': reactNative,
     },
     rules: {
       'react/self-closing-comp': ['error', { component: true, html: true }],
@@ -29,12 +46,15 @@ module.exports = [
           locale: 'auto',
         },
       ],
+      'react-native/sort-styles': ['error', 'asc', { ignoreClassNames: false, ignoreStyleProperties: false }],
       'linebreak-style': ['error', 'unix'],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'error',
       'prettier/prettier': 'error',
+      'react-compiler/react-compiler': 'error',
     },
+    files: ['**/*.ts', '**/*.tsx'],
   },
-];
+);

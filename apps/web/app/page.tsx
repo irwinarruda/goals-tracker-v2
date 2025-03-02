@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from 'design-system';
+import { Button } from 'goals-tokens';
 
 export default function Web() {
   return (
     <div>
       <h1>Web</h1>
-      <Button onClick={() => console.log('Pressed!')} text="Boop" />
+      <Button text="Boop" onClick={() => console.log('Pressed!')} />
     </div>
   );
 }

@@ -6,14 +6,17 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rm -rf dist && rm -rf node_modules"
+    "clean": "rm -rf dist && rm -rf node_modules",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "devDependencies": {
-    "typescript-config": "*",
     "@types/react": "^18.2.14",
-    "@types/react-native": "^0.73.0",
+    "eslint": "^9.21.0",
+    "eslint-config-goals": "*",
     "tsup": "^8.0.1",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "typescript-config": "*"
   },
   "dependencies": {
     "react": "^18.2.0",

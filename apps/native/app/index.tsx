@@ -1,16 +1,16 @@
-import { StyleSheet, Text, View, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Button } from 'design-system';
+import { Button } from 'goals-tokens';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
 export default function Native() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Native</Text>
       <Button
+        text="Boop"
         onClick={() => {
           Alert.alert('Pressed!');
         }}
-        text="Boop"
       />
       <StatusBar style="auto" />
     </View>
@@ -19,14 +19,14 @@ export default function Native() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    flex: 1,
     justifyContent: 'center',
   },
   header: {
+    fontSize: 36,
     fontWeight: 'bold',
     marginBottom: 20,
-    fontSize: 36,
   },
 });
