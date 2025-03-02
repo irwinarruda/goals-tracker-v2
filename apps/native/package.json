@@ -6,6 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "dev": "expo start --web",
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo && rm -rf .expo",
+    "lint": "eslint \"{src,apps}/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"{src,apps}/**/*.{ts,tsx}\" --fix",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -30,6 +33,8 @@
     "@babel/core": "^7.25.2",
     "@types/react": "18.3.12",
     "babel-plugin-react-compiler": "^19.0.0-beta-e1e972c-20250221",
+    "eslint": "^9.20.0",
+    "eslint-config-goals": "*",
     "react-compiler-runtime": "^19.0.0-beta-e1e972c-20250221",
     "typescript": "^5.5.4"
   }

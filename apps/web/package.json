@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .turbo && rm -rf .next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint \"{src,apps}/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"{src,apps}/**/*.{ts,tsx}\" --fix"
   },
   "dependencies": {
-    "design-system": "*",
+    "goals-tokens": "*",
     "next": "^14.0.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -20,8 +22,8 @@
     "@types/react": "18.3.12",
     "@types/react-dom": "^18.3.1",
     "babel-plugin-react-native-web": "^0.19.10",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4",
+    "eslint": "^9.20.0",
+    "eslint-config-goals": "*",
     "typescript": "^5.5.4",
     "typescript-config": "*"
   }

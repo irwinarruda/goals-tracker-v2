@@ -1,12 +1,12 @@
 {
-  "name": "design-system",
+  "name": "goals-tokens",
   "version": "0.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist && rm -rf node_modules"
   },
   "devDependencies": {
     "typescript-config": "*",
