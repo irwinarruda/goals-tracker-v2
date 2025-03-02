@@ -1,4 +1,4 @@
-# <img src="./assets/logo.svg" height="40px" align="center" /> Goals Tracker v2
+# <img src="./assets/logo-github.png" height="65px" align="center" /> Goals Tracker v2
 
 A native mobile app that helps users track their daily goals, routines, tasks, notes and schedules.
 
