@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from 'goals-tokens';
+import { Button } from 'goals-react/web';
 
 export default function Web() {
   return (
     <div>
       <h1>Web</h1>
-      <Button text="Boop" onClick={() => console.log('Pressed!')} />
+      <Button onPress={() => console.log('Pressed!')}>Boop!</Button>
     </div>
   );
 }

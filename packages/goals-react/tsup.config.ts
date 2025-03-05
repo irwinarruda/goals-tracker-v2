@@ -2,14 +2,15 @@ import { defineConfig, Options } from 'tsup';
 
 export default defineConfig((options: Options) => ({
   entry: {
-    index: 'src/index.tsx',
+    native: 'src/native.ts',
+    web: 'src/web.ts',
+    tokens: 'src/tokens.ts',
   },
   banner: {
     js: "'use client'",
   },
   clean: true,
   format: ['cjs', 'esm'],
-  external: ['react'],
   dts: true,
   ...options,
 }));

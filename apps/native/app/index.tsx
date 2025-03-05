@@ -1,32 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button } from 'goals-tokens';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { FAB } from 'goals-react/native';
+import { View } from 'react-native';
+
+import { DayCard } from '~/app/components/day-card';
 
 export default function Native() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Native</Text>
-      <Button
-        text="Boop"
-        onClick={() => {
-          Alert.alert('Pressed!');
-        }}
-      />
-      <StatusBar style="auto" />
+    <View className="flex-1 items-stretch justify-center">
+      <View className="w-full flex-1 pt-4">
+        <FlashList
+          contentContainerStyle={{ paddingLeft: 16 - DayCard.cardMargin, paddingRight: 16 - DayCard.cardMargin }}
+          data={
+            [
+              { day: new Date(), status: 'pending' },
+              { day: new Date(), status: 'success', isBought: true },
+              { day: new Date(), status: 'success' },
+              { day: new Date(), status: 'pending_today' },
+              { day: new Date(), status: 'error' },
+            ] as const
+          }
+          estimatedItemSize={100}
+          numColumns={5}
+          renderItem={({ item, index }) => {
+            return (
+              <View className="flex-1 items-center justify-center">
+                <DayCard count={index + 1} day={item.day} isBought={!!item.isBought} status={item.status} />
+              </View>
+            );
+          }}
+        />
+      </View>
+      <FAB source={require('~/assets/plus.svg')} />
+      {/* <CreateGoal /> */}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  header: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-});

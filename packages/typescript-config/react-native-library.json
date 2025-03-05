@@ -7,6 +7,8 @@
     "lib": ["DOM", "ESNext"],
     "noEmit": true,
     "resolveJsonModule": true,
+    "module": "Node16",
+    "moduleResolution": "node16",
     "target": "ESNext"
   }
 }

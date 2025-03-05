@@ -1,0 +1,61 @@
+{
+  "name": "goals-react",
+  "version": "0.0.0",
+  "main": "./dist/native.js",
+  "types": "./dist/native.d.js",
+  "exports": {
+    "./web": {
+      "import": {
+        "types": "./dist/web.d.mjs",
+        "default": "./dist/web.mjs"
+      },
+      "require": {
+        "types": "./dist/web.d.js",
+        "default": "./dist/web.js"
+      }
+    },
+    "./native": {
+      "import": {
+        "types": "./dist/native.d.mjs",
+        "default": "./dist/native.mjs"
+      },
+      "require": {
+        "types": "./dist/native.d.js",
+        "default": "./dist/native.js"
+      }
+    },
+    "./tokens": {
+      "import": {
+        "types": "./dist/tokens.d.mjs",
+        "default": "./dist/tokens.mjs"
+      },
+      "require": {
+        "types": "./dist/tokens.d.js",
+        "default": "./dist/tokens.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "eslint": "^9.21.0",
+    "eslint-config-goals": "*",
+    "tsup": "^8.0.1",
+    "typescript": "5.5.4",
+    "typescript-config": "*"
+  },
+  "dependencies": {
+    "expo-image": "^2.0.6",
+    "react": "18.3.1",
+    "react-native": "0.76.7",
+    "react-native-gesture-handler": "~2.20.2",
+    "react-native-reanimated": "3.16.1"
+  }
+}
