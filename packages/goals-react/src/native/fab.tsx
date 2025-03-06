@@ -14,7 +14,7 @@ export type FABProps = RectButtonProps & {
 export function FAB({ source, size = 64, onPress }: FABProps) {
   return (
     <RectButton style={[styles.button, { width: size, height: size }, styles.defaultPosition]} onPress={onPress}>
-      <Image source={source} style={{ width: size - 8, height: size - 8 }} />
+      <Image source={source} style={{ width: size - 16, height: size - 16 }} />
     </RectButton>
   );
 }

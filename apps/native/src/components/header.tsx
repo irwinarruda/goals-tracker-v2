@@ -31,7 +31,7 @@ export function Header({ options, back, route }: NativeStackHeaderProps) {
         headerLeft={HeaderLeft}
         headerLeftContainerStyle={{ paddingLeft: 16 }}
         headerRight={HeaderRight}
-        headerRightContainerStyle={{ paddingRight: 16 }}
+        headerRightContainerStyle={{ paddingRight: 17 - ChipButton.paddingHorizontal }}
         headerStyle={{ backgroundColor: colors['blue-500'] }}
         title={getHeaderTitle(options, route.name)}
       />

@@ -5,21 +5,25 @@ import { StatusBar } from 'expo-status-bar';
 import { colors } from 'goals-react/tokens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
 
 function AppLayout() {
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
         screenOptions={{
           contentStyle: {
             backgroundColor: colors.white,
           },
           headerTitle: '',
+          fullScreenGestureEnabled: true,
+
           header: args => <Header {...args} />,
         }}
       />
-      <StatusBar backgroundColor="red" style="light" />
+      <StatusBar style="light" />
+      <CreateGoal />
     </GestureHandlerRootView>
   );
 }

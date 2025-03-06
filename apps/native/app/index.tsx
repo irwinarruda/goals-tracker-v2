@@ -31,7 +31,6 @@ export default function Native() {
         />
       </View>
       <FAB source={require('~/assets/plus.svg')} />
-      {/* <CreateGoal /> */}
     </View>
   );
 }

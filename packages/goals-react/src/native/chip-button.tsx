@@ -4,6 +4,9 @@ import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
 import { colors } from '../tokens';
 
+const paddingHorizontal = 6;
+const paddingVertical = 2;
+
 export type ChipButtonProps = RectButtonProps & {
   leftIcon?: React.ReactNode;
   active?: boolean;
@@ -19,6 +22,9 @@ export function ChipButton({ children, leftIcon, active, onPress }: ChipButtonPr
   );
 }
 
+ChipButton.paddingHorizontal = paddingHorizontal;
+ChipButton.paddingVertical = paddingVertical;
+
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
@@ -27,8 +33,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     fontSize: 15,
     maxWidth: 200,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingHorizontal: paddingHorizontal,
+    paddingVertical: paddingVertical,
     textAlign: 'center',
   },
   button_active: {
