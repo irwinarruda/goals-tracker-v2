@@ -7,10 +7,10 @@ import { colors } from '../tokens';
 const paddingHorizontal = 6;
 const paddingVertical = 2;
 
-export type ChipButtonProps = RectButtonProps & {
+export interface ChipButtonProps extends RectButtonProps {
   leftIcon?: React.ReactNode;
   active?: boolean;
-};
+}
 
 export function ChipButton({ children, leftIcon, active, onPress }: ChipButtonProps) {
   return (

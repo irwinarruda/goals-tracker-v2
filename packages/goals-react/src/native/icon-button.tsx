@@ -6,10 +6,10 @@ import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
 import { colors } from '../tokens';
 
-export type IconButtonProps = RectButtonProps & {
+export interface IconButtonProps extends RectButtonProps {
   source: ImageProps['source'];
   size?: number;
-};
+}
 
 export function IconButton({ source, size = 28, onPress }: IconButtonProps) {
   return (

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
-export type ButtonProps = RectButtonProps;
+export interface ButtonProps extends RectButtonProps {}
 
 export function Button({ children, onPress }: ButtonProps) {
   return (

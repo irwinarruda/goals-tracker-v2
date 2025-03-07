@@ -52,6 +52,8 @@ module.exports = tseslint.config(
       'simple-import-sort/exports': 'error',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
       'prettier/prettier': 'error',
       'react-compiler/react-compiler': 'error',
     },
