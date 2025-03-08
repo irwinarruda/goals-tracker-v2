@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import {
   NativeSyntheticEvent,
   StyleProp,
@@ -13,20 +13,43 @@ import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { colors } from '../tokens';
 
+function maskValue(value: string, mask: string): string {
+  let result = '';
+  let valueIndex = 0;
+  value = value.replace(/[^0-9]/g, '');
+  for (let i = 0; i < mask.length && valueIndex < value.length; i++) {
+    const maskChar = mask[i];
+    const valueChar = value[valueIndex];
+    if (maskChar === '#') {
+      result += valueChar;
+      valueIndex++;
+    } else {
+      result += maskChar;
+    }
+  }
+
+  return result;
+}
+
 const fontSize = 16;
 const paddingHorizontal = 16;
 const paddingVertical = 12;
 const labelPaddingHorizontal = 8;
 const labelLeft = paddingHorizontal - labelPaddingHorizontal;
 const labelTop = paddingVertical + 1;
+const rightIconRight = paddingHorizontal - 4;
+const rightIconTop = paddingVertical - 2;
 
 export interface InputProps extends TextInputProps {
   label?: string;
   containerStyle?: StyleProp<ViewStyle>;
+  allowOnlyNumbers?: boolean;
+  maskNumber?: string;
+  rightIcon?: React.ReactNode;
 }
 
 export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
-  ({ containerStyle, style, ...props }, ref) => {
+  ({ containerStyle, style, maskNumber, allowOnlyNumbers, rightIcon, ...props }, ref) => {
     const [focus, setFocus] = useState(false);
     const top = useSharedValue(labelTop);
     const left = useSharedValue(labelLeft);
@@ -44,11 +67,17 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
       scale.value = withTiming(1);
     }
 
+    function onChangeText(text: string) {
+      if (allowOnlyNumbers) text = text.replace(/[^0-9]/g, '');
+      if (maskNumber) text = maskValue(text, maskNumber);
+      if (props.onChangeText) props.onChangeText(text);
+    }
+
     function onBlur(e: NativeSyntheticEvent<TextInputFocusEventData>) {
       setFocus(false);
       if (props.onBlur) props.onBlur(e);
-      const text = e.nativeEvent.text;
-      if (!text) moveLabelDown();
+      const value = props.value ?? e.nativeEvent.text;
+      if (!value) moveLabelDown();
     }
 
     function onFocus(e: NativeSyntheticEvent<TextInputFocusEventData>) {
@@ -57,29 +86,28 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
       moveLabelUp();
     }
 
+    useEffect(() => {
+      if (!focus && props.value) moveLabelUp();
+    }, [props.value]);
+
     return (
       <View style={[styles.container, containerStyle]}>
-        <Animated.Text
-          style={[
-            styles.label_text,
-            {
-              top: top,
-              left: left,
-              transform: [{ scale: scale }],
-            },
-          ]}
-        >
+        <Animated.Text style={[styles.label_text, { top: top, left: left, transform: [{ scale: scale }] }]}>
           {props.label}
         </Animated.Text>
         <TextInput
+          {...props}
+          maxLength={maskNumber ? maskNumber.length : props.maxLength}
           placeholder={props.label}
           placeholderTextColor={colors['transparent']}
           ref={ref}
-          style={[styles.input, focus && styles.input_focus, style]}
+          style={[styles.input, focus && styles.input_focus, !!rightIcon && styles.input_right_icon, style]}
           onBlur={onBlur}
+          onChange={e => console.log('onChange', e.nativeEvent.text)}
+          onChangeText={onChangeText}
           onFocus={onFocus}
-          {...props}
         />
+        {rightIcon && <View style={styles.right_icon}>{rightIcon}</View>}
       </View>
     );
   },
@@ -90,7 +118,6 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
 };
 
 Input.displayName = 'Input';
-Input.fontSize = fontSize;
 Input.paddingHorizontal = paddingHorizontal;
 Input.paddingVertical = paddingVertical;
 
@@ -118,6 +145,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
+  input_right_icon: {
+    paddingRight: 48,
+  },
   label_text: {
     backgroundColor: colors.white,
     color: colors['gray-500'],
@@ -128,5 +158,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: labelTop,
     zIndex: 1,
+  },
+  right_icon: {
+    position: 'absolute',
+    right: rightIconRight,
+    top: rightIconTop,
   },
 });

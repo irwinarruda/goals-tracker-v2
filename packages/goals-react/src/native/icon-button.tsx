@@ -7,14 +7,26 @@ import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 import { colors } from '../tokens';
 
 export interface IconButtonProps extends RectButtonProps {
-  source: ImageProps['source'];
+  icon?: React.ReactNode;
+  source?: ImageProps['source'];
   size?: number;
+  backgroundColor?: string;
 }
 
-export function IconButton({ source, size = 28, onPress }: IconButtonProps) {
+export function IconButton({ source, size = 28, icon, backgroundColor, onPress }: IconButtonProps) {
+  if (!source && !icon) throw new Error('Either source or icon must be provided');
+  let Component: React.ReactNode;
+  if (source) {
+    Component = <Image source={source} style={{ width: size - 8, height: size - 8 }} />;
+  } else {
+    Component = icon;
+  }
   return (
-    <RectButton style={[styles.button, { width: size, height: size }]} onPress={onPress}>
-      <Image source={source} style={{ width: size - 8, height: size - 8 }} />
+    <RectButton
+      style={[styles.button, !!backgroundColor && { backgroundColor }, { width: size, height: size }]}
+      onPress={onPress}
+    >
+      {Component}
     </RectButton>
   );
 }
