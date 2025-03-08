@@ -1,4 +1,4 @@
-import { colors } from 'goals-react/tokens';
+import { colors, fontSizes, roundeds } from 'goals-react/tokens';
 import * as React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
@@ -44,8 +44,8 @@ DayCard.cardMargin = cardMargin;
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    borderRadius: 6,
-    fontSize: 15,
+    borderRadius: roundeds['lg'],
+    fontSize: fontSizes['md'],
     justifyContent: 'center',
     textAlign: 'center',
   },
@@ -65,17 +65,17 @@ const styles = StyleSheet.create({
   },
   day_count: {
     color: 'white',
-    fontSize: 24,
+    fontSize: fontSizes['2xl'],
     fontWeight: 'bold',
   },
   day_number: {
     color: 'white',
-    fontSize: 9,
+    fontSize: fontSizes['3xs'],
     fontWeight: 'semibold',
   },
   day_text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: fontSizes['2xs'],
     fontWeight: 'semibold',
   },
   is_bought: {

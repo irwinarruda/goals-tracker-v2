@@ -1,4 +1,4 @@
-import { Checkbox as RNCheckBox, CheckboxProps as RNCheckBoxProps } from 'expo-checkbox';
+import { Checkbox as RNCheckbox, CheckboxProps as RNCheckboxProps } from 'expo-checkbox';
 import React from 'react';
 import {
   GestureResponderEvent,
@@ -10,16 +10,15 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { colors } from '../tokens';
+import { colors, fontSizes, roundeds } from '../tokens';
 
-export interface CheckBoxProps extends RNCheckBoxProps {
+export interface CheckboxProps extends RNCheckboxProps {
   label?: string;
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
-  checkboxStyle?: StyleProp<ViewStyle>;
 }
 
-export function CheckBox({ label, containerStyle, labelStyle, style, value = false, ...props }: CheckBoxProps) {
+export function Checkbox({ label, containerStyle, labelStyle, value = false, ...props }: CheckboxProps) {
   function onPress(e: GestureResponderEvent) {
     e.preventDefault();
     if (props.disabled) return;
@@ -32,8 +31,7 @@ export function CheckBox({ label, containerStyle, labelStyle, style, value = fal
 
   function renderLabel() {
     if (!label) return null;
-    const text = props.disabled && label;
-    return <Text style={[styles.label, props.disabled && styles.disabledLabel, labelStyle]}>{text}</Text>;
+    return <Text style={[styles.label, props.disabled && styles.disabledLabel, labelStyle]}>{label}</Text>;
   }
 
   return (
@@ -43,7 +41,13 @@ export function CheckBox({ label, containerStyle, labelStyle, style, value = fal
       style={[styles.container, containerStyle]}
       onPress={onPress}
     >
-      <RNCheckBox {...props} style={[styles.checkbox, style]} value={value} onValueChange={onValueChange} />
+      <RNCheckbox
+        {...props}
+        color={props.color ?? colors['pink-500']}
+        style={[styles.checkbox, props.style]}
+        value={value}
+        onValueChange={onValueChange}
+      />
       {renderLabel()}
     </TouchableOpacity>
   );
@@ -51,7 +55,7 @@ export function CheckBox({ label, containerStyle, labelStyle, style, value = fal
 
 const styles = StyleSheet.create({
   checkbox: {
-    // Default styles for the checkbox
+    borderRadius: roundeds['md'],
   },
   container: {
     alignItems: 'center',
@@ -64,6 +68,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors['gray-700'],
     flex: 1,
-    fontSize: 16,
+    fontSize: fontSizes['sm'],
+    marginLeft: 8,
   },
 });

@@ -1,4 +1,4 @@
-const { colors } = require('goals-react/tokens');
+const { colors, fontSizes, roundeds } = require('goals-react/tokens');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -7,6 +7,8 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: { ...colors },
+      fontSize: { ...fontSizes },
+      borderRadius: { ...roundeds },
       fontFamily: {
         sans: ['Roboto'],
       },

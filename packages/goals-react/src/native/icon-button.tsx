@@ -4,7 +4,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
-import { colors } from '../tokens';
+import { colors, roundeds } from '../tokens';
 
 export interface IconButtonProps extends RectButtonProps {
   icon?: React.ReactNode;
@@ -35,9 +35,8 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: colors['pink-500'],
-    borderRadius: 1000,
+    borderRadius: roundeds['full'],
     flexDirection: 'row',
-    fontSize: 15,
     justifyContent: 'center',
     maxWidth: 200,
     paddingHorizontal: 6,

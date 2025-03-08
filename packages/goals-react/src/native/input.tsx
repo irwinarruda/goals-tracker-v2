@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { colors } from '../tokens';
+import { colors, fontSizes, roundeds } from '../tokens';
 
 function maskValue(value: string, mask: string): string {
   let result = '';
@@ -31,14 +31,13 @@ function maskValue(value: string, mask: string): string {
   return result;
 }
 
-const fontSize = 16;
+const fontSize = fontSizes['md'];
 const paddingHorizontal = 16;
 const paddingVertical = 12;
 const labelPaddingHorizontal = 8;
 const labelLeft = paddingHorizontal - labelPaddingHorizontal;
 const labelTop = paddingVertical + 1;
 const rightIconRight = paddingHorizontal - 4;
-const rightIconTop = paddingVertical - 2;
 
 export interface InputProps extends TextInputProps {
   label?: string;
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.white,
     borderColor: colors['gray-500'],
-    borderRadius: 4,
+    borderRadius: roundeds['md'],
     borderWidth: 1,
     color: colors['gray-700'],
     fontSize: fontSize,
@@ -160,8 +159,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   right_icon: {
+    bottom: 0,
+    justifyContent: 'center',
     position: 'absolute',
     right: rightIconRight,
-    top: rightIconTop,
+    top: 0,
   },
 });

@@ -2,11 +2,13 @@ import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
+import { colors, fontSizes, roundeds } from '../tokens';
+
 export interface ButtonProps extends RectButtonProps {}
 
-export function Button({ children, onPress }: ButtonProps) {
+export function Button({ children, onPress, style }: ButtonProps) {
   return (
-    <RectButton style={styles.button} onPress={onPress}>
+    <RectButton style={[styles.button, style]} onPress={onPress}>
       <Text style={styles.text}>{children}</Text>
     </RectButton>
   );
@@ -14,17 +16,17 @@ export function Button({ children, onPress }: ButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#2f80ed',
-    borderRadius: 10,
-    fontSize: 15,
-    maxWidth: 200,
-    paddingBottom: 14,
+    backgroundColor: colors['pink-500'],
+    borderRadius: roundeds['md'],
+    paddingBottom: 10,
     paddingLeft: 30,
     paddingRight: 30,
-    paddingTop: 14,
-    textAlign: 'center',
+    paddingTop: 10,
   },
   text: {
-    color: 'white',
+    color: colors['white'],
+    fontSize: fontSizes['md'],
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

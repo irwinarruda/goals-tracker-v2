@@ -43,7 +43,12 @@ export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, InputPro
         maskNumber="##/##/####"
         ref={ref}
         rightIcon={
-          <IconButton backgroundColor={colors['transparent']} icon={<CalendarIcon />} onPress={onCalendarPress} />
+          <IconButton
+            backgroundColor={colors['transparent']}
+            icon={<CalendarIcon />}
+            size={32}
+            onPress={onCalendarPress}
+          />
         }
       />
       <DateTimePickerModal isVisible={showDatePicker} mode="date" onCancel={onDateChange} onConfirm={onDateChange} />

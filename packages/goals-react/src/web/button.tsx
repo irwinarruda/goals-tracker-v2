@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { roundeds } from '../tokens';
+
 export type ButtonProps = {
   onPress: () => void;
   children?: React.ReactNode;
@@ -16,8 +18,7 @@ export function Button({ children, onPress }: ButtonProps) {
 const styles = {
   button: {
     backgroundColor: '#2f80ed',
-    borderRadius: 10,
-    fontSize: 15,
+    borderRadius: roundeds['md'],
     maxWidth: 200,
     paddingBottom: 14,
     paddingLeft: 30,

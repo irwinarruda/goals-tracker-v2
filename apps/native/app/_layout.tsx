@@ -5,7 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import { colors } from 'goals-react/tokens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { CreateGoal } from '~/app/components/create-goal';
+import { ChangeGoal } from '~/app/components/change-goal';
+// import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
 
 function AppLayout() {
@@ -23,7 +24,8 @@ function AppLayout() {
         }}
       />
       <StatusBar style="light" />
-      <CreateGoal />
+      {/* <CreateGoal /> */}
+      <ChangeGoal />
     </GestureHandlerRootView>
   );
 }

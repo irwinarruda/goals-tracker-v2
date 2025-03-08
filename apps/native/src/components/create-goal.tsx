@@ -1,6 +1,5 @@
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
-import CheckBox from '@react-native-community/checkbox';
-import { DateInput, Input } from 'goals-react/native';
+import { Button, Checkbox, DateInput, Input } from 'goals-react/native';
 import { colors } from 'goals-react/tokens';
 import { useRef, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -13,22 +12,25 @@ export function CreateGoal() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [daysValue, setDaysValue] = useState('');
   const [dateValue, setDateValue] = useState('');
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [useCoins, setUseCoins] = useState(false);
+  const [coins, setCoins] = useState('');
 
   function onSheetChanges(index: number) {
     console.log('handleSheetChanges', index);
   }
+
+  function onSubmit() {}
 
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
       enableDynamicSizing={false}
       handleIndicatorStyle={{
-        backgroundColor: colors['blue-500'],
+        backgroundColor: colors['pink-500'],
         width: 50,
       }}
       ref={bottomSheetRef}
-      snapPoints={['90%']}
+      snapPoints={[400]}
       enablePanDownToClose
       onChange={onSheetChanges}
     >
@@ -54,7 +56,25 @@ export function CreateGoal() {
             onChangeText={setDateValue}
           />
         </View>
-        <CheckBox disabled={false} value={toggleCheckBox} onValueChange={newValue => setToggleCheckBox(newValue)} />
+        <View className="flex-row items-center gap-5 pt-5">
+          <Checkbox
+            containerStyle={{ flex: 3 }}
+            label="Use coins to complete a the day"
+            value={useCoins}
+            onValueChange={setUseCoins}
+          />
+          <Input
+            containerStyle={{ flex: 1 }}
+            keyboardType="numeric"
+            label="Coins"
+            maxLength={2}
+            value={coins}
+            allowOnlyNumbers
+            onChangeText={setCoins}
+          />
+        </View>
+        <View className="pt-5" />
+        <Button onPress={onSubmit}>Create</Button>
       </BottomSheetView>
     </BottomSheet>
   );
