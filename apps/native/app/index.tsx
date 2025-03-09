@@ -3,13 +3,20 @@ import { FAB } from 'goals-react/native';
 import { View } from 'react-native';
 
 import { DayCard } from '~/app/components/day-card';
+import { useAppState } from '~/app/states';
+import { config } from '~/app/utils/config';
 
 export default function Native() {
+  const onGoalOpen = useAppState(state => state.onGoalOpen);
+
   return (
     <View className="flex-1 items-stretch justify-center">
       <View className="w-full flex-1 pt-4">
         <FlashList
-          contentContainerStyle={{ paddingLeft: 16 - DayCard.cardMargin, paddingRight: 16 - DayCard.cardMargin }}
+          contentContainerStyle={{
+            paddingLeft: config.screenPadding - DayCard.cardMargin,
+            paddingRight: config.screenPadding - DayCard.cardMargin,
+          }}
           data={
             [
               { day: new Date(), status: 'pending' },
@@ -30,7 +37,7 @@ export default function Native() {
           }}
         />
       </View>
-      <FAB source={require('~/assets/plus.svg')} />
+      <FAB source={require('~/assets/plus.svg')} onPress={onGoalOpen} />
     </View>
   );
 }

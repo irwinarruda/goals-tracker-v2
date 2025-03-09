@@ -4,22 +4,33 @@ import { colors } from 'goals-react/tokens';
 import { useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
+import { config } from '~/app/utils/config';
+
+import { useAppState } from '../states';
+
 function renderBackdrop(props: BottomSheetBackdropProps) {
   return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
 }
 
 export function CreateGoal() {
+  const onGoalClose = useAppState(state => state.onGoalClose);
+  const createGoal = useAppState(state => state.createGoal);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const [daysValue, setDaysValue] = useState('');
-  const [dateValue, setDateValue] = useState('');
+  const [description, setDescription] = useState('');
+  const [days, setDays] = useState('');
+  const [date, setDate] = useState('');
   const [useCoins, setUseCoins] = useState(false);
   const [coins, setCoins] = useState('');
 
-  function onSheetChanges(index: number) {
-    console.log('handleSheetChanges', index);
+  function onSubmit() {
+    createGoal({
+      date: date,
+      days: Number(days),
+      description,
+      useCoins,
+      coins: Number(coins),
+    });
   }
-
-  function onSubmit() {}
 
   return (
     <BottomSheet
@@ -32,28 +43,33 @@ export function CreateGoal() {
       ref={bottomSheetRef}
       snapPoints={[400]}
       enablePanDownToClose
-      onChange={onSheetChanges}
+      onClose={onGoalClose}
     >
-      <BottomSheetView className="flex-1 items-stretch p-4">
+      <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
         <Text className="text-2xl text-gray-700">Create Goal</Text>
         <View className="pt-5" />
-        <Input label="Description" placeholder="Enter a goal description" />
+        <Input
+          label="Description"
+          placeholder="Enter a goal description"
+          value={description}
+          onChangeText={setDescription}
+        />
         <View className="flex-row gap-5 pt-5">
           <Input
             containerStyle={{ flex: 1 }}
             keyboardType="numeric"
             label="Days"
             maxLength={3}
-            value={daysValue}
+            value={days}
             allowOnlyNumbers
-            onChangeText={setDaysValue}
+            onChangeText={setDays}
           />
           <DateInput
             containerStyle={{ flex: 2 }}
             keyboardType="numeric"
             label="Start date"
-            value={dateValue}
-            onChangeText={setDateValue}
+            value={date}
+            onChangeText={setDate}
           />
         </View>
         <View className="flex-row items-center gap-5 pt-5">

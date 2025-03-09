@@ -102,7 +102,6 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
           ref={ref}
           style={[styles.input, focus && styles.input_focus, !!rightIcon && styles.input_right_icon, style]}
           onBlur={onBlur}
-          onChange={e => console.log('onChange', e.nativeEvent.text)}
           onChangeText={onChangeText}
           onFocus={onFocus}
         />

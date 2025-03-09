@@ -68,6 +68,6 @@ const styles = StyleSheet.create({
   title_text: {
     color: colors['white'],
     fontSize: fontSizes['md'],
-    fontWeight: 'bold',
+    fontWeight: 'regular',
   },
 });

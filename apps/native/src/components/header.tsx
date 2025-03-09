@@ -5,6 +5,8 @@ import { ChipButton, IconButton } from 'goals-react/native';
 import { colors } from 'goals-react/tokens';
 import { Text, View } from 'react-native';
 
+import { config } from '~/app/utils/config';
+
 function HeaderLeft() {
   return (
     <View className="flex-row items-center">
@@ -29,15 +31,15 @@ export function Header({ options, back, route }: NativeStackHeaderProps) {
         {...options}
         back={back}
         headerLeft={HeaderLeft}
-        headerLeftContainerStyle={{ paddingLeft: 16 }}
+        headerLeftContainerStyle={{ paddingLeft: config.screenPadding }}
         headerRight={HeaderRight}
-        headerRightContainerStyle={{ paddingRight: 17 - ChipButton.paddingHorizontal }}
+        headerRightContainerStyle={{ paddingRight: config.screenPadding + 1 - ChipButton.paddingHorizontal }}
         headerStyle={{ backgroundColor: colors['blue-500'] }}
         title={getHeaderTitle(options, route.name)}
       />
       <View className="flex-row justify-between bg-blue-500 p-4">
         <View className="items-center justify-center rounded-full bg-blue-300 px-3 py-0">
-          <Text className="font-regular text-lg text-white">Manter calorias diárias abaixo de 200</Text>
+          <Text className="font-regular text-md text-white">Manter calorias diárias abaixo de 200</Text>
         </View>
         <IconButton source={require('~/assets/swap.svg')} />
       </View>

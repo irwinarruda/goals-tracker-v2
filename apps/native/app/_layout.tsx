@@ -6,26 +6,28 @@ import { colors } from 'goals-react/tokens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ChangeGoal } from '~/app/components/change-goal';
-// import { CreateGoal } from '~/app/components/create-goal';
+import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
+import { useAppState } from '~/app/states';
 
 function AppLayout() {
+  const isCreateGoalOpen = useAppState(state => state.isCreateGoalOpen);
+  const isChangeGoalOpen = false;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
         screenOptions={{
           contentStyle: {
-            backgroundColor: colors.white,
+            backgroundColor: colors['white'],
           },
           headerTitle: '',
           fullScreenGestureEnabled: true,
-
           header: args => <Header {...args} />,
         }}
       />
       <StatusBar style="light" />
-      {/* <CreateGoal /> */}
-      <ChangeGoal />
+      {isCreateGoalOpen && <CreateGoal />}
+      {isChangeGoalOpen && <ChangeGoal />}
     </GestureHandlerRootView>
   );
 }

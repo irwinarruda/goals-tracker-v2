@@ -18,10 +18,42 @@ function CalendarIcon() {
   );
 }
 
-export type DateInputProps = InputProps;
+function formatDateToDisplay(isoDateString?: string) {
+  if (!isoDateString) return '';
+  try {
+    const date = new Date(isoDateString);
+    if (isNaN(date.getTime())) return '';
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  } catch {
+    return '';
+  }
+}
 
-export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, InputProps>((props, ref) => {
+function parseDisplayToIsoDate(displayDateString?: string) {
+  if (!displayDateString) return '';
+  const parts = displayDateString.split('/');
+  if (parts.length !== 3) return '';
+  const day = parts[0];
+  const month = parts[1];
+  const year = parts[2];
+  try {
+    const strDate = `${year}-${month}-${day}T00:00:00.000`;
+    const date = new Date(strDate);
+    if (isNaN(date.getTime())) return '';
+    return strDate;
+  } catch {
+    return '';
+  }
+}
+
+export interface DateInputProps extends InputProps {}
+
+export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, DateInputProps>((props, ref) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [displayValue, setDisplayValue] = useState(formatDateToDisplay(props.value));
 
   function onCalendarPress() {
     setShowDatePicker(true);
@@ -33,7 +65,21 @@ export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, InputPro
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
-    if (props.onChangeText) props.onChangeText(`${day}/${month}/${year}`);
+    const isoDateString = `${year}-${month}-${day}T00:00:00.000`;
+    if (props.onChangeText) props.onChangeText(isoDateString);
+    setDisplayValue(formatDateToDisplay(isoDateString));
+  }
+
+  function onChangeText(text: string) {
+    setDisplayValue(text);
+    if (text.length === 10) {
+      const isoDate = parseDisplayToIsoDate(text);
+      if (isoDate && props.onChangeText) {
+        props.onChangeText(isoDate);
+      }
+    } else {
+      if (props.onChangeText) props.onChangeText('');
+    }
   }
 
   return (
@@ -50,8 +96,15 @@ export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, InputPro
             onPress={onCalendarPress}
           />
         }
+        value={displayValue}
+        onChangeText={onChangeText}
       />
-      <DateTimePickerModal isVisible={showDatePicker} mode="date" onCancel={onDateChange} onConfirm={onDateChange} />
+      <DateTimePickerModal
+        isVisible={showDatePicker}
+        mode="date"
+        onCancel={() => setShowDatePicker(false)}
+        onConfirm={onDateChange}
+      />
     </>
   );
 });

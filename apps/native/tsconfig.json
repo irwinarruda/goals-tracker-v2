@@ -4,6 +4,8 @@
     "strict": true,
     "module": "Node16",
     "moduleResolution": "node16",
+    "strictNullChecks": true,
+    "skipLibCheck": true,
     "paths": {
       "~/app/*": ["./src/*"],
       "~/assets/*": ["./assets/*"]

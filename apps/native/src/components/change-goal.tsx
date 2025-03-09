@@ -8,6 +8,8 @@ import { colors } from 'goals-react/tokens';
 import { useRef } from 'react';
 import { Text, View } from 'react-native';
 
+import { config } from '~/app/utils/config';
+
 import { GoalCard } from './goal-card';
 
 const textAndHandleSize = 63;
@@ -35,13 +37,13 @@ export function ChangeGoal() {
       style={{ width: '100%' }}
       enablePanDownToClose
     >
-      <BottomSheetView className="w-full items-stretch px-4">
+      <BottomSheetView className="w-full items-stretch px-4" style={{ paddingHorizontal: config.screenPadding }}>
         <Text className="text-2xl text-gray-700">Change Goal</Text>
         <View className="pt-3" />
       </BottomSheetView>
       <View style={{ height: listSize }}>
         <BottomSheetFlashList
-          contentContainerStyle={{ paddingHorizontal: 16 }}
+          contentContainerStyle={{ paddingHorizontal: config.screenPadding }}
           data={data}
           estimatedItemSize={80}
           renderItem={({ item, index }) => {
