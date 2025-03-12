@@ -12,12 +12,14 @@ export interface ChipButtonProps extends RectButtonProps {
   active?: boolean;
 }
 
-export function ChipButton({ children, leftIcon, active, onPress }: ChipButtonProps) {
+export function ChipButton({ children, leftIcon, active, enabled, onPress }: ChipButtonProps) {
   return (
-    <RectButton style={[styles.button, active && styles.button_active]} onPress={onPress}>
-      {leftIcon}
-      {leftIcon && <View style={styles.left_divider} />}
-      <Text style={styles.text}>{children}</Text>
+    <RectButton enabled={enabled} style={[styles.button, active && styles.button_active]} onPress={onPress}>
+      <View accessible accessibilityRole="button" style={styles.button_view}>
+        {leftIcon}
+        {leftIcon && <View style={styles.left_divider} />}
+        <Text style={styles.text}>{children}</Text>
+      </View>
     </RectButton>
   );
 }
@@ -27,10 +29,8 @@ ChipButton.paddingVertical = paddingVertical;
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: 'center',
     backgroundColor: 'transparent',
     borderRadius: roundeds['full'],
-    flexDirection: 'row',
     maxWidth: 200,
     paddingHorizontal: paddingHorizontal,
     paddingVertical: paddingVertical,
@@ -39,6 +39,10 @@ const styles = StyleSheet.create({
   button_active: {
     borderColor: colors['yellow-500'],
     borderWidth: 1,
+  },
+  button_view: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   left_divider: {
     marginRight: 2,

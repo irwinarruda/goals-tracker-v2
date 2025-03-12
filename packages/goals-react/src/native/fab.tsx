@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Image, ImageProps } from 'expo-image';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
 import { colors, roundeds } from '../tokens';
@@ -11,10 +11,16 @@ export interface FABProps extends RectButtonProps {
   size?: number;
 }
 
-export function FAB({ source, size = 64, onPress }: FABProps) {
+export function FAB({ source, size = 64, enabled, onPress }: FABProps) {
   return (
-    <RectButton style={[styles.button, { width: size, height: size }, styles.default_position]} onPress={onPress}>
-      <Image source={source} style={{ width: size - 16, height: size - 16 }} />
+    <RectButton
+      enabled={enabled}
+      style={[styles.button, { width: size, height: size }, styles.default_position]}
+      onPress={onPress}
+    >
+      <View accessible accessibilityRole="button">
+        <Image source={source} style={{ width: size - 16, height: size - 16 }} />
+      </View>
     </RectButton>
   );
 }

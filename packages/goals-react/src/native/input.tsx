@@ -3,6 +3,7 @@ import {
   NativeSyntheticEvent,
   StyleProp,
   StyleSheet,
+  Text,
   TextInput,
   TextInputFocusEventData,
   TextInputProps,
@@ -38,6 +39,9 @@ const labelPaddingHorizontal = 8;
 const labelLeft = paddingHorizontal - labelPaddingHorizontal;
 const labelTop = paddingVertical + 1;
 const rightIconRight = paddingHorizontal - 4;
+const errorPaddingHorizontal = 8;
+const errorLeft = paddingHorizontal - errorPaddingHorizontal;
+const errorBottom = -4;
 
 export interface InputProps extends TextInputProps {
   label?: string;
@@ -45,10 +49,11 @@ export interface InputProps extends TextInputProps {
   allowOnlyNumbers?: boolean;
   maskNumber?: string;
   rightIcon?: React.ReactNode;
+  error?: string;
 }
 
 export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
-  ({ containerStyle, style, maskNumber, allowOnlyNumbers, rightIcon, ...props }, ref) => {
+  ({ containerStyle, style, maskNumber, allowOnlyNumbers, rightIcon, error, ...props }, ref) => {
     const [focus, setFocus] = useState(false);
     const top = useSharedValue(labelTop);
     const left = useSharedValue(labelLeft);
@@ -90,7 +95,7 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
     }, [props.value]);
 
     return (
-      <View style={[styles.container, containerStyle]}>
+      <View style={[styles.container, props.editable === false && styles.container_disabled, containerStyle]}>
         <Animated.Text style={[styles.label_text, { top: top, left: left, transform: [{ scale: scale }] }]}>
           {props.label}
         </Animated.Text>
@@ -100,12 +105,19 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
           placeholder={props.label}
           placeholderTextColor={colors['transparent']}
           ref={ref}
-          style={[styles.input, focus && styles.input_focus, !!rightIcon && styles.input_right_icon, style]}
+          style={[
+            styles.input,
+            focus && styles.input_focus,
+            !!rightIcon && styles.input_right_icon,
+            !!error && styles.input_error,
+            style,
+          ]}
           onBlur={onBlur}
           onChangeText={onChangeText}
           onFocus={onFocus}
         />
         {rightIcon && <View style={styles.right_icon}>{rightIcon}</View>}
+        {error && <Text style={[!!error && styles.error_text]}>{error}</Text>}
       </View>
     );
   },
@@ -123,6 +135,19 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
   },
+  container_disabled: {
+    opacity: 0.6,
+  },
+  error_text: {
+    backgroundColor: colors.white,
+    bottom: errorBottom,
+    color: colors['pink-500'],
+    fontSize: fontSizes['2xs'],
+    left: errorLeft,
+    paddingHorizontal: errorPaddingHorizontal,
+    position: 'absolute',
+    zIndex: 1,
+  },
   input: {
     backgroundColor: colors.white,
     borderColor: colors['gray-500'],
@@ -133,6 +158,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: paddingHorizontal,
     paddingVertical: paddingVertical,
   },
+  input_error: {
+    borderColor: colors['pink-500'],
+    shadowColor: colors['pink-500'],
+  },
   input_focus: {
     borderColor: colors['blue-500'],
     borderWidth: 2,
@@ -141,7 +170,7 @@ const styles = StyleSheet.create({
     shadowColor: colors['blue-500'],
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowRadius: 2,
   },
   input_right_icon: {
     paddingRight: 48,

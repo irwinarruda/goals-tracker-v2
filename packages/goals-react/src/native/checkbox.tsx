@@ -55,7 +55,7 @@ export function Checkbox({ label, containerStyle, labelStyle, value = false, ...
 
 const styles = StyleSheet.create({
   checkbox: {
-    borderRadius: roundeds['md'],
+    borderRadius: roundeds['sm'],
   },
   container: {
     alignItems: 'center',

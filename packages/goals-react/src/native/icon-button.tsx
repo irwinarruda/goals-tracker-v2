@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Image, ImageProps } from 'expo-image';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
 import { colors, roundeds } from '../tokens';
@@ -13,7 +13,7 @@ export interface IconButtonProps extends RectButtonProps {
   backgroundColor?: string;
 }
 
-export function IconButton({ source, size = 28, icon, backgroundColor, onPress }: IconButtonProps) {
+export function IconButton({ source, size = 28, icon, backgroundColor, enabled, onPress }: IconButtonProps) {
   if (!source && !icon) throw new Error('Either source or icon must be provided');
   let Component: React.ReactNode;
   if (source) {
@@ -23,10 +23,13 @@ export function IconButton({ source, size = 28, icon, backgroundColor, onPress }
   }
   return (
     <RectButton
+      enabled={enabled}
       style={[styles.button, !!backgroundColor && { backgroundColor }, { width: size, height: size }]}
       onPress={onPress}
     >
-      {Component}
+      <View accessible accessibilityRole="button">
+        {Component}
+      </View>
     </RectButton>
   );
 }

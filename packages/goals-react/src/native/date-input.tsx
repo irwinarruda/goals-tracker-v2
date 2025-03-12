@@ -40,7 +40,7 @@ function parseDisplayToIsoDate(displayDateString?: string) {
   const month = parts[1];
   const year = parts[2];
   try {
-    const strDate = `${year}-${month}-${day}T00:00:00.000`;
+    const strDate = `${year}-${month}-${day}`;
     const date = new Date(strDate);
     if (isNaN(date.getTime())) return '';
     return strDate;
@@ -65,18 +65,16 @@ export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, DateInpu
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
-    const isoDateString = `${year}-${month}-${day}T00:00:00.000`;
+    const isoDateString = `${year}-${month}-${day}`;
     if (props.onChangeText) props.onChangeText(isoDateString);
-    setDisplayValue(formatDateToDisplay(isoDateString));
+    setDisplayValue(`${day}/${month}/${year}`);
   }
 
   function onChangeText(text: string) {
     setDisplayValue(text);
     if (text.length === 10) {
       const isoDate = parseDisplayToIsoDate(text);
-      if (isoDate && props.onChangeText) {
-        props.onChangeText(isoDate);
-      }
+      if (isoDate && props.onChangeText) props.onChangeText(isoDate);
     } else {
       if (props.onChangeText) props.onChangeText('');
     }

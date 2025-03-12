@@ -44,7 +44,7 @@ export const goalsSlice: AppState<GoalsSlice> = set => ({
       coins: params.coins,
       days: Array.from({ length: params.days }, (_, index) => {
         return {
-          date: date.addDay(dateGoal, index).toISOString(),
+          date: date.addDays(dateGoal, index).toISOString().split('T')[0],
           status: index === 0 ? 'pending_today' : 'pending',
         };
       }),

@@ -1,7 +1,7 @@
 export const date = Object.freeze({
-  addDay(date: Date, num?: number) {
-    if (!num) return date;
-    return new Date(date.getTime() + 24 * 60 * 60 * 1000);
+  addDays(date: Date, numDays?: number) {
+    if (!numDays) return date;
+    return new Date(date.getTime() + numDays * 24 * 60 * 60 * 1000);
   },
   getWeekDay(date: Date) {
     const ptDayNames = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
