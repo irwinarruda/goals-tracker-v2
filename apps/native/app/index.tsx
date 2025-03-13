@@ -7,7 +7,7 @@ import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 
 export default function Native() {
-  const onGoalOpen = useAppState(state => state.onGoalOpen);
+  const onGoalOpen = useAppState(state => state.onCreateGoalOpen);
 
   return (
     <View className="flex-1 items-stretch justify-center">

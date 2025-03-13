@@ -12,7 +12,7 @@ import { useAppState } from '~/app/states';
 
 function AppLayout() {
   const isCreateGoalOpen = useAppState(state => state.isCreateGoalOpen);
-  const isChangeGoalOpen = false;
+  const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack

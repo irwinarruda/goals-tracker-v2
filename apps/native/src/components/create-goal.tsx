@@ -7,30 +7,30 @@ import { useForm, useWatch } from 'react-hook-form';
 import { Text, View } from 'react-native';
 import * as v from 'valibot';
 
+import { useFormTrigger } from '~/app/providers/form-trigger';
+import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 
-import { useAppState } from '../states';
 import { FormCheckbox } from './form/form-checkbox';
 import { FormDateInput } from './form/form-date-input';
 import { FormInput } from './form/form-input';
 
-const CreateGoalFormSchema = v.lazy((input: any) =>
-  v.object({
+const CreateGoalFormSchema = v.lazy((input: any) => {
+  return v.object({
     description: v.pipe(v.string(), v.minLength(4, 'Description must be at least 4 characters')),
     days: v.pipe(
       v.string(),
-      v.minLength(0, 'Required'),
+      v.minLength(1, 'Required'),
       v.maxLength(3, 'Less than 999.'),
       v.regex(/[0-9]/g, 'Must be a number.'),
     ),
     date: v.pipe(v.string(), v.isoDate('Date must be in ISO format')),
     useCoins: v.pipe(v.boolean()),
-    coins:
-      !input.useCoins && console.log('useCoins', input)
-        ? v.pipe(v.string())
-        : v.pipe(v.string(), v.minLength(0, 'Required')),
-  }),
-);
+    coins: !input.useCoins
+      ? v.pipe(v.string())
+      : v.pipe(v.string(), v.minLength(1, 'Required'), v.regex(/[0-9]/g, 'Number.')),
+  });
+});
 
 type CreateGoalForm = v.InferOutput<typeof CreateGoalFormSchema>;
 
@@ -41,8 +41,9 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 export function CreateGoal() {
   const {
     handleSubmit,
+    trigger,
     control,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useForm<CreateGoalForm>({
     resolver: valibotResolver(CreateGoalFormSchema),
     defaultValues: {
@@ -54,13 +55,11 @@ export function CreateGoal() {
     },
   });
   const useCoins = useWatch({ control, name: 'useCoins' });
-  const onGoalClose = useAppState(state => state.onGoalClose);
+  const onGoalClose = useAppState(state => state.onCreateGoalClose);
   const createGoal = useAppState(state => state.createGoal);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  console.log('errors', errors);
 
   async function onSubmit(data: CreateGoalForm) {
-    console.log('data', data);
     await new Promise(res => setTimeout(res, 1000));
     createGoal({
       date: data.date,
@@ -70,6 +69,13 @@ export function CreateGoal() {
       coins: Number(data.coins),
     });
   }
+
+  useFormTrigger<CreateGoalForm>({
+    when: 'useCoins',
+    trigger: 'coins',
+    control,
+    triggerFn: trigger,
+  });
 
   return (
     <BottomSheet

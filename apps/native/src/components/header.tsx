@@ -5,6 +5,7 @@ import { ChipButton, IconButton } from 'goals-react/native';
 import { colors } from 'goals-react/tokens';
 import { Text, View } from 'react-native';
 
+import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 
 function HeaderLeft() {
@@ -25,6 +26,7 @@ function HeaderRight() {
 }
 
 export function Header({ options, back, route }: NativeStackHeaderProps) {
+  const onChangeGoalOpen = useAppState(state => state.onChangeGoalOpen);
   return (
     <>
       <ReactNavigationHeader
@@ -41,7 +43,7 @@ export function Header({ options, back, route }: NativeStackHeaderProps) {
         <View className="items-center justify-center rounded-full bg-blue-300 px-3 py-0">
           <Text className="font-regular text-md text-white">Manter calorias diárias abaixo de 200</Text>
         </View>
-        <IconButton source={require('~/assets/swap.svg')} />
+        <IconButton source={require('~/assets/swap.svg')} onPress={onChangeGoalOpen} />
       </View>
     </>
   );

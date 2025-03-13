@@ -1,4 +1,5 @@
-import { date } from '../utils/date';
+import { date } from '~/app/utils/date';
+
 import { AppState } from '.';
 
 export type GoalDayStatus = 'success' | 'error' | 'pending' | 'pending_today';
@@ -27,15 +28,19 @@ export type CreateGoalDTO = {
 export type GoalsSlice = {
   goals: Goal[];
   isCreateGoalOpen: boolean;
-  onGoalOpen(): void;
-  onGoalClose(): void;
-  createGoal(params: CreateGoalDTO): void;
+  onCreateGoalOpen(): void;
+  onCreateGoalClose(): void;
+  createGoal(params: CreateGoalDTO): Promise<void>;
+  isChangeGoalOpen: boolean;
+  onChangeGoalOpen(): void;
+  onChangeGoalClose(): void;
 };
 
 export const goalsSlice: AppState<GoalsSlice> = set => ({
   goals: [],
   isCreateGoalOpen: false,
-  createGoal(params) {
+  isChangeGoalOpen: false,
+  async createGoal(params) {
     const dateGoal = new Date(params.date);
     const goal: Goal = {
       id: Date.now().toString(),
@@ -53,10 +58,16 @@ export const goalsSlice: AppState<GoalsSlice> = set => ({
       goals: [...state.goals, goal],
     }));
   },
-  onGoalOpen() {
+  onCreateGoalOpen() {
     set({ isCreateGoalOpen: true });
   },
-  onGoalClose() {
+  onCreateGoalClose() {
     set({ isCreateGoalOpen: false });
+  },
+  onChangeGoalOpen() {
+    set({ isChangeGoalOpen: true });
+  },
+  onChangeGoalClose() {
+    set({ isChangeGoalOpen: false });
   },
 });

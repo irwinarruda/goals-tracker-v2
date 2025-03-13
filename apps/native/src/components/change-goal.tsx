@@ -8,6 +8,7 @@ import { colors } from 'goals-react/tokens';
 import { useRef } from 'react';
 import { Text, View } from 'react-native';
 
+import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 
 import { GoalCard } from './goal-card';
@@ -20,6 +21,7 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 }
 
 export function ChangeGoal() {
+  const onChangeGoalClose = useAppState(state => state.onChangeGoalClose);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const data = [1, 2, 3, 4, 2] as const;
   const snapSize = Math.min(700, 40 + textAndHandleSize + (GoalCard.height + dividerSize) * data.length);
@@ -36,6 +38,7 @@ export function ChangeGoal() {
       snapPoints={[snapSize]}
       style={{ width: '100%' }}
       enablePanDownToClose
+      onClose={onChangeGoalClose}
     >
       <BottomSheetView className="w-full items-stretch px-4" style={{ paddingHorizontal: config.screenPadding }}>
         <Text className="text-2xl text-gray-700">Change Goal</Text>

@@ -37,6 +37,7 @@ module.exports = [
         },
       ],
       'react-native/sort-styles': ['error', 'asc', { ignoreClassNames: false, ignoreStyleProperties: false }],
+      'react-hooks/exhaustive-deps': 'off',
       'linebreak-style': ['error', 'unix'],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
