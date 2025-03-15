@@ -18,15 +18,21 @@ function HeaderLeft() {
 }
 
 function HeaderRight() {
+  const coins = useAppState(state => state.coins);
+  const text = coins + (coins === 1 ? ' coin' : ' coins');
   return (
     <ChipButton leftIcon={<Image source={require('~/assets/coin.svg')} style={{ width: 16, height: 16 }} />}>
-      24 coins
+      {text}
     </ChipButton>
   );
 }
 
 export function Header({ options, back, route }: NativeStackHeaderProps) {
   const onChangeGoalOpen = useAppState(state => state.onChangeGoalOpen);
+  const selectedGoal = useAppState(state => state.selectedGoal);
+  const hasGoals = useAppState(state => state.hasGoals);
+  const goalDescription = selectedGoal?.description ?? 'Alique no botão + para adicionar um goal';
+
   return (
     <>
       <ReactNavigationHeader
@@ -39,11 +45,13 @@ export function Header({ options, back, route }: NativeStackHeaderProps) {
         headerStyle={{ backgroundColor: colors['blue-500'] }}
         title={getHeaderTitle(options, route.name)}
       />
-      <View className="flex-row justify-between bg-blue-500 p-4">
-        <View className="items-center justify-center rounded-full bg-blue-300 px-3 py-0">
-          <Text className="font-regular text-md text-white">Manter calorias diárias abaixo de 200</Text>
+      <View className="flex-row justify-between gap-4 bg-blue-500 p-4">
+        <View className="flex-grow-1 justify-center rounded-full bg-blue-300 px-3 py-0">
+          <Text className="font-regular text-md text-white" ellipsizeMode="tail" numberOfLines={1}>
+            {goalDescription}
+          </Text>
         </View>
-        <IconButton source={require('~/assets/swap.svg')} onPress={onChangeGoalOpen} />
+        <IconButton enabled={hasGoals} source={require('~/assets/swap.svg')} onPress={onChangeGoalOpen} />
       </View>
     </>
   );

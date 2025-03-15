@@ -7,7 +7,9 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: { ...colors },
+      borderColor: { ...colors },
       fontSize: { ...fontSizes },
+      textColor: { ...colors },
       borderRadius: { ...roundeds },
       fontFamily: {
         sans: ['Roboto'],

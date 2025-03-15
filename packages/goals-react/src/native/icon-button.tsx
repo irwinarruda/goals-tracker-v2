@@ -13,7 +13,7 @@ export interface IconButtonProps extends RectButtonProps {
   backgroundColor?: string;
 }
 
-export function IconButton({ source, size = 28, icon, backgroundColor, enabled, onPress }: IconButtonProps) {
+export function IconButton({ source, size = 28, icon, backgroundColor, enabled, style, onPress }: IconButtonProps) {
   if (!source && !icon) throw new Error('Either source or icon must be provided');
   let Component: React.ReactNode;
   if (source) {
@@ -24,7 +24,13 @@ export function IconButton({ source, size = 28, icon, backgroundColor, enabled, 
   return (
     <RectButton
       enabled={enabled}
-      style={[styles.button, !!backgroundColor && { backgroundColor }, { width: size, height: size }]}
+      style={[
+        styles.button,
+        !!backgroundColor && { backgroundColor },
+        { width: size, height: size },
+        !enabled && styles.button_disabled,
+        style,
+      ]}
       onPress={onPress}
     >
       <View accessible accessibilityRole="button">
@@ -45,5 +51,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     textAlign: 'center',
+  },
+  button_disabled: {
+    opacity: 0.6,
   },
 });

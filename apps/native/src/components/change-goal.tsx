@@ -21,11 +21,14 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 }
 
 export function ChangeGoal() {
+  const goals = useAppState(state => state.goals);
   const onChangeGoalClose = useAppState(state => state.onChangeGoalClose);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const data = [1, 2, 3, 4, 2] as const;
-  const snapSize = Math.min(700, 40 + textAndHandleSize + (GoalCard.height + dividerSize) * data.length);
-  const listSize = Math.min(600, textAndHandleSize + (GoalCard.height + dividerSize) * data.length);
+  const snapSize = Math.min(700, 40 + textAndHandleSize + (GoalCard.height + dividerSize) * goals.length);
+  const listSize = Math.min(600, textAndHandleSize + (GoalCard.height + dividerSize) * goals.length);
+
+  function onGoalChange() {}
+
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
@@ -47,12 +50,12 @@ export function ChangeGoal() {
       <View style={{ height: listSize }}>
         <BottomSheetFlashList
           contentContainerStyle={{ paddingHorizontal: config.screenPadding }}
-          data={data}
+          data={goals}
           estimatedItemSize={80}
           renderItem={({ item, index }) => {
             return (
               <View className={index === 0 ? undefined : 'pt-3'}>
-                <GoalCard />
+                <GoalCard goal={item} onPress={onGoalChange} />
               </View>
             );
           }}

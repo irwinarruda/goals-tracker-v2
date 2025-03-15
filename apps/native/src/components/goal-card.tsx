@@ -2,26 +2,32 @@ import { colors, fontSizes, roundeds } from 'goals-react/tokens';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
-export type GoalCardProps = RectButtonProps & {};
+import { Goal } from '~/app/states/goalsSlice';
+import { date } from '~/app/utils/date';
+
+export type GoalCardProps = RectButtonProps & {
+  goal: Goal;
+};
 
 export function GoalCard(props: GoalCardProps) {
+  const goal = props.goal;
   return (
     <RectButton {...props} style={[styles.card, props.style]}>
       <View style={styles.title_container}>
-        <Text style={styles.title_text}>Manter calorias diárias abaixo de 200</Text>
+        <Text style={styles.title_text}>{goal.description}</Text>
       </View>
       <View style={styles.info_container}>
         <View style={styles.info_item}>
           <Text style={styles.info_title}>Duration</Text>
-          <Text style={styles.info_value}>30 days</Text>
+          <Text style={styles.info_value}>{goal.days.length}</Text>
         </View>
         <View style={styles.info_item}>
           <Text style={styles.info_title}>Start date</Text>
-          <Text style={styles.info_value}>30/10/2023</Text>
+          <Text style={styles.info_value}>{date.getDayMonthYear(date.toDate(goal.days[0].date))}</Text>
         </View>
         <View style={styles.info_item}>
           <Text style={styles.info_title}>Coins</Text>
-          <Text style={styles.info_value}>20</Text>
+          <Text style={styles.info_value}>{goal.coins}</Text>
         </View>
       </View>
     </RectButton>

@@ -33,7 +33,7 @@ export function DayCard({ status, isBought, count, day, onPress }: DayCardProps)
     >
       <Text style={styles.day_count}>{count}</Text>
       <Text style={styles.day_text}>{date.getWeekDay(day)}</Text>
-      <Text style={styles.day_number}>{date.getDayAndMonth(day)}</Text>
+      <Text style={styles.day_number}>{date.getDayMonth(day)}</Text>
     </RectButton>
   );
 }
