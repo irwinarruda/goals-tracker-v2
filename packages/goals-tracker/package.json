@@ -1,17 +1,17 @@
 {
-  "name": "goals-react",
+  "name": "goals-tracker",
   "version": "0.0.0",
   "main": "./dist/native.js",
   "types": "./dist/native.d.js",
   "exports": {
-    "./web": {
+    "./logic": {
       "import": {
-        "types": "./dist/web.d.mjs",
-        "default": "./dist/web.mjs"
+        "types": "./dist/logic.d.mjs",
+        "default": "./dist/logic.mjs"
       },
       "require": {
-        "types": "./dist/web.d.js",
-        "default": "./dist/web.js"
+        "types": "./dist/logic.d.js",
+        "default": "./dist/logic.js"
       }
     },
     "./native": {
@@ -32,6 +32,16 @@
       "require": {
         "types": "./dist/tokens.d.js",
         "default": "./dist/tokens.js"
+      }
+    },
+    "./web": {
+      "import": {
+        "types": "./dist/web.d.mjs",
+        "default": "./dist/web.mjs"
+      },
+      "require": {
+        "types": "./dist/web.d.js",
+        "default": "./dist/web.js"
       }
     },
     "./package.json": "./package.json"

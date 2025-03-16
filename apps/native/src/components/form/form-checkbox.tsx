@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxProps } from 'goals-react/native';
+import { Checkbox, CheckboxProps } from 'goals-tracker/native';
 import { Control, useController } from 'react-hook-form';
 
 export interface FormCheckboxProps extends CheckboxProps {

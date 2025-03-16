@@ -40,7 +40,6 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-native": "^5.0.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-tailwindcss": "^3.18.0",
     "next": "^14.0.4",
     "typescript-eslint": "^8.20.0"
   },

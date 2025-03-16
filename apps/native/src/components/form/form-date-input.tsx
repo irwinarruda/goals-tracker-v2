@@ -1,4 +1,4 @@
-import { DateInput, DateInputProps } from 'goals-react/native';
+import { DateInput, DateInputProps } from 'goals-tracker/native';
 import { Control, useController } from 'react-hook-form';
 
 export interface FormDateInputProps extends DateInputProps {

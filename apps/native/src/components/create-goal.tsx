@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
 import { valibotResolver } from '@hookform/resolvers/valibot';
-import { Button } from 'goals-react/native';
-import { colors } from 'goals-react/tokens';
+import { Button } from 'goals-tracker/native';
+import { colors } from 'goals-tracker/tokens';
 import { useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { Text, View } from 'react-native';
@@ -10,6 +10,7 @@ import * as v from 'valibot';
 import { useFormTrigger } from '~/app/providers/form-trigger';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
+import { error } from '~/app/utils/error';
 
 import { FormCheckbox } from './form/form-checkbox';
 import { FormDateInput } from './form/form-date-input';
@@ -60,8 +61,7 @@ export function CreateGoal() {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   async function onSubmit(data: CreateGoalForm) {
-    await new Promise(res => setTimeout(res, 1000));
-    createGoal({
+    await createGoal({
       date: data.date,
       days: Number(data.days),
       description: data.description,
@@ -131,7 +131,7 @@ export function CreateGoal() {
           />
         </View>
         <View className="pt-5" />
-        <Button enabled={!isSubmitting} onPress={() => handleSubmit(onSubmit)()}>
+        <Button enabled={!isSubmitting} onPress={() => error.listen(handleSubmit(onSubmit))()}>
           Create
         </Button>
       </BottomSheetView>

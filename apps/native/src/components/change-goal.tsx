@@ -4,12 +4,13 @@ import BottomSheet, {
   BottomSheetFlashList,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { colors } from 'goals-react/tokens';
+import { colors } from 'goals-tracker/tokens';
 import { useRef } from 'react';
 import { Text, View } from 'react-native';
 
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
+import { error } from '~/app/utils/error';
 
 import { GoalCard } from './goal-card';
 
@@ -23,11 +24,15 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 export function ChangeGoal() {
   const goals = useAppState(state => state.goals);
   const onChangeGoalClose = useAppState(state => state.onChangeGoalClose);
+  const changeGoal = useAppState(state => state.changeGoal);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapSize = Math.min(700, 40 + textAndHandleSize + (GoalCard.height + dividerSize) * goals.length);
-  const listSize = Math.min(600, textAndHandleSize + (GoalCard.height + dividerSize) * goals.length);
+  const rawListSize = textAndHandleSize + (GoalCard.height + dividerSize) * goals.length;
+  const snapSize = Math.min(700, Math.max(400, 40 + rawListSize));
+  const listSize = Math.min(600, rawListSize);
 
-  function onGoalChange() {}
+  async function onGoalChange(id: string) {
+    await changeGoal(id);
+  }
 
   return (
     <BottomSheet
@@ -54,8 +59,8 @@ export function ChangeGoal() {
           estimatedItemSize={80}
           renderItem={({ item, index }) => {
             return (
-              <View className={index === 0 ? undefined : 'pt-3'}>
-                <GoalCard goal={item} onPress={onGoalChange} />
+              <View className={index === 0 ? undefined : 'pt-3'} key={item.id}>
+                <GoalCard goal={item} onPress={() => error.listenAsync(onGoalChange)(item.id)} />
               </View>
             );
           }}

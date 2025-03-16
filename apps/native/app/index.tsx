@@ -1,7 +1,6 @@
-/* eslint-disable tailwindcss/classnames-order */
 import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
-import { FAB } from 'goals-react/native';
+import { FAB } from 'goals-tracker/native';
 import { Text, View } from 'react-native';
 
 import { DayCard } from '~/app/components/day-card';
@@ -37,7 +36,11 @@ export default function Native() {
           numColumns={5}
           renderItem={({ item, index }) => {
             return (
-              <View className="flex-1 items-center justify-center" style={{ paddingTop: DayCard.cardMargin }}>
+              <View
+                className="flex-1 items-center justify-center"
+                key={item.date.toString()}
+                style={{ paddingTop: DayCard.cardMargin }}
+              >
                 <DayCard count={index + 1} day={new Date(item.date)} isBought={!!item.isBought} status={item.status} />
               </View>
             );

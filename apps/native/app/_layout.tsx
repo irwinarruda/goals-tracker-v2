@@ -2,8 +2,10 @@ import '../global.css';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { colors } from 'goals-react/tokens';
+import { colors } from 'goals-tracker/tokens';
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
 
 import { ChangeGoal } from '~/app/components/change-goal';
 import { CreateGoal } from '~/app/components/create-goal';
@@ -13,6 +15,11 @@ import { useAppState } from '~/app/states';
 function AppLayout() {
   const isCreateGoalOpen = useAppState(state => state.isCreateGoalOpen);
   const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
+  const prepare = useAppState(state => state.prepare);
+
+  useEffect(() => {
+    prepare();
+  }, []);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
@@ -28,6 +35,7 @@ function AppLayout() {
       <StatusBar style="light" />
       {isCreateGoalOpen && <CreateGoal />}
       {isChangeGoalOpen && <ChangeGoal />}
+      <Toast />
     </GestureHandlerRootView>
   );
 }

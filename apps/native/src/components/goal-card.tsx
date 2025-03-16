@@ -1,4 +1,4 @@
-import { colors, fontSizes, roundeds } from 'goals-react/tokens';
+import { colors, fontSizes, roundeds } from 'goals-tracker/tokens';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 

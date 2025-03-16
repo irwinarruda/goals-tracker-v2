@@ -1,12 +1,13 @@
 import { getHeaderTitle, Header as ReactNavigationHeader } from '@react-navigation/elements';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
-import { ChipButton, IconButton } from 'goals-react/native';
-import { colors } from 'goals-react/tokens';
+import { ChipButton, IconButton } from 'goals-tracker/native';
+import { colors } from 'goals-tracker/tokens';
 import { Text, View } from 'react-native';
 
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
+import { error } from '~/app/utils/error';
 
 function HeaderLeft() {
   return (
@@ -30,7 +31,6 @@ function HeaderRight() {
 export function Header({ options, back, route }: NativeStackHeaderProps) {
   const onChangeGoalOpen = useAppState(state => state.onChangeGoalOpen);
   const selectedGoal = useAppState(state => state.selectedGoal);
-  const hasGoals = useAppState(state => state.hasGoals);
   const goalDescription = selectedGoal?.description ?? 'Alique no botão + para adicionar um goal';
 
   return (
@@ -46,12 +46,12 @@ export function Header({ options, back, route }: NativeStackHeaderProps) {
         title={getHeaderTitle(options, route.name)}
       />
       <View className="flex-row justify-between gap-4 bg-blue-500 p-4">
-        <View className="flex-grow-1 justify-center rounded-full bg-blue-300 px-3 py-0">
+        <View className="flex-1 justify-center rounded-full bg-blue-300 px-3 py-0">
           <Text className="font-regular text-md text-white" ellipsizeMode="tail" numberOfLines={1}>
             {goalDescription}
           </Text>
         </View>
-        <IconButton enabled={hasGoals} source={require('~/assets/swap.svg')} onPress={onChangeGoalOpen} />
+        <IconButton source={require('~/assets/swap.svg')} onPress={error.listen(onChangeGoalOpen)} />
       </View>
     </>
   );

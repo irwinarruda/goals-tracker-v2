@@ -2,9 +2,10 @@ import { defineConfig, Options } from 'tsup';
 
 export default defineConfig((options: Options) => ({
   entry: {
+    logic: 'src/logic.ts',
     native: 'src/native.ts',
-    web: 'src/web.ts',
     tokens: 'src/tokens.ts',
+    web: 'src/web.ts',
   },
   banner: {
     js: "'use client'",

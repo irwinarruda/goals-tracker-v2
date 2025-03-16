@@ -1,4 +1,4 @@
-const { colors, fontSizes, roundeds } = require('goals-react/tokens');
+const { colors, fontSizes, roundeds } = require('goals-tracker/tokens');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

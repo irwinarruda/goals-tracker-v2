@@ -1,4 +1,4 @@
-import { Input, InputProps } from 'goals-react/native';
+import { Input, InputProps } from 'goals-tracker/native';
 import { Control, useController } from 'react-hook-form';
 
 export interface FormInputProps extends InputProps {

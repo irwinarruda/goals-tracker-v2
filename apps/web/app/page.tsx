@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from 'goals-react/web';
+import { Button } from 'goals-tracker/web';
 
 export default function Web() {
   return (

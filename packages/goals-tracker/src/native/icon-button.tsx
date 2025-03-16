@@ -28,7 +28,7 @@ export function IconButton({ source, size = 28, icon, backgroundColor, enabled, 
         styles.button,
         !!backgroundColor && { backgroundColor },
         { width: size, height: size },
-        !enabled && styles.button_disabled,
+        enabled === false && styles.button_disabled,
         style,
       ]}
       onPress={onPress}

@@ -2,6 +2,8 @@ import { compute } from 'zustand-computed-state';
 
 import { date } from '~/app/utils/date';
 
+import { error } from '../utils/error';
+import { storage } from '../utils/storage';
 import { AppState } from '.';
 
 export type GoalDayStatus = 'success' | 'error' | 'pending' | 'pending_today';
@@ -29,11 +31,14 @@ export type CreateGoalDTO = {
 };
 
 export type GoalsSlice = {
+  prepare: () => Promise<void>;
+  persist: () => Promise<void>;
   goals: Goal[];
   hasGoals: boolean;
   selectedGoalId?: string;
   selectedGoal?: Goal;
   createGoal(params: CreateGoalDTO): Promise<void>;
+  changeGoal(id: string): Promise<void>;
   coins: number;
   isCreateGoalOpen: boolean;
   onCreateGoalOpen(): void;
@@ -44,6 +49,16 @@ export type GoalsSlice = {
 };
 
 export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
+  async prepare() {
+    const data = await storage.get<GoalsSlice>('goalsSlice');
+    if (!data) return;
+    set({ goals: data.goals, coins: data.coins, selectedGoalId: data.selectedGoalId });
+  },
+  async persist() {
+    const { goals, coins, selectedGoalId } = get();
+    await storage.set('goalsSlice', { goals, coins, selectedGoalId });
+  },
+
   goals: [],
   selectedGoalId: undefined,
   ...compute(get, state => ({
@@ -51,7 +66,7 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     selectedGoal: state.goals.find(goal => goal.id === state.selectedGoalId),
   })),
   async createGoal(params) {
-    const { selectedGoalId } = get();
+    const { selectedGoalId, persist } = get();
     const dateGoal = new Date(params.date);
     const goal: Goal = {
       id: Date.now().toString(),
@@ -71,6 +86,14 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       selectedGoalId: selectedGoalId || goal.id,
       isCreateGoalOpen: false,
     }));
+    await persist();
+  },
+  async changeGoal(id) {
+    const { goals, selectedGoalId, persist } = get();
+    if (selectedGoalId === id) throw new error.UserError('Goal already selected');
+    if (!goals.some(goal => goal.id === id)) throw new error.DeveloperError('Goal not found');
+    set({ selectedGoalId: id, isChangeGoalOpen: false });
+    await persist();
   },
 
   coins: 0,
@@ -85,6 +108,8 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
 
   isChangeGoalOpen: false,
   onChangeGoalOpen() {
+    const { hasGoals } = get();
+    if (!hasGoals) throw new error.UserError('No goals to select', 'Create a goal first to be able to select it.');
     set({ isChangeGoalOpen: true });
   },
   onChangeGoalClose() {
