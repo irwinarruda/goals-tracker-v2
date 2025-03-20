@@ -1,15 +1,22 @@
 import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
+import { GoalDay } from 'goals-tracker/logic';
 import { FAB } from 'goals-tracker/native';
 import { Text, View } from 'react-native';
 
 import { DayCard } from '~/app/components/day-card';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
+import { error } from '~/app/utils/error';
 
 export default function Native() {
   const selectedGoal = useAppState(state => state.selectedGoal);
   const onGoalOpen = useAppState(state => state.onCreateGoalOpen);
+  const completeGoalDay = useAppState(state => state.completeGoalDay);
+
+  async function onDayPress(goalDay: GoalDay) {
+    await completeGoalDay(goalDay);
+  }
 
   if (!selectedGoal) {
     return (
@@ -34,14 +41,14 @@ export default function Native() {
           data={selectedGoal.days}
           estimatedItemSize={100}
           numColumns={5}
-          renderItem={({ item, index }) => {
+          renderItem={({ item }) => {
             return (
               <View
                 className="flex-1 items-center justify-center"
                 key={item.date.toString()}
                 style={{ paddingTop: DayCard.cardMargin }}
               >
-                <DayCard count={index + 1} day={new Date(item.date)} isBought={!!item.isBought} status={item.status} />
+                <DayCard goalDay={item} onPress={() => error.listenAsync(onDayPress)(item)} />
               </View>
             );
           }}

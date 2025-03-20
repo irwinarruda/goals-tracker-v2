@@ -1,4 +1,5 @@
 import '../global.css';
+import 'react-native-get-random-values';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -20,6 +21,7 @@ function AppLayout() {
   useEffect(() => {
     prepare();
   }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack

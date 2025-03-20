@@ -1,34 +1,10 @@
+import { isToday, isYesterday, parseISO } from 'date-fns';
+import { completeGoalDay, createGoal, CreateGoalDTO, Goal, GoalDay, syncGoals } from 'goals-tracker/logic';
 import { compute } from 'zustand-computed-state';
-
-import { date } from '~/app/utils/date';
 
 import { error } from '../utils/error';
 import { storage } from '../utils/storage';
 import { AppState } from '.';
-
-export type GoalDayStatus = 'success' | 'error' | 'pending' | 'pending_today';
-
-export interface GoalDay {
-  date: string;
-  status: GoalDayStatus;
-  isBought: boolean;
-}
-
-export interface Goal {
-  id: string;
-  description: string;
-  useCoins: boolean;
-  coins?: number;
-  days: GoalDay[];
-}
-
-export type CreateGoalDTO = {
-  description: string;
-  days: number;
-  date: string;
-  useCoins: boolean;
-  coins?: number;
-};
 
 export type GoalsSlice = {
   prepare: () => Promise<void>;
@@ -37,6 +13,7 @@ export type GoalsSlice = {
   hasGoals: boolean;
   selectedGoalId?: string;
   selectedGoal?: Goal;
+  completeGoalDay(goalDay: GoalDay): Promise<void>;
   createGoal(params: CreateGoalDTO): Promise<void>;
   changeGoal(id: string): Promise<void>;
   coins: number;
@@ -50,9 +27,13 @@ export type GoalsSlice = {
 
 export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   async prepare() {
+    const { persist } = get();
     const data = await storage.get<GoalsSlice>('goalsSlice');
     if (!data) return;
+    syncGoals(data.goals);
+    console.log(data.goals);
     set({ goals: data.goals, coins: data.coins, selectedGoalId: data.selectedGoalId });
+    await persist();
   },
   async persist() {
     const { goals, coins, selectedGoalId } = get();
@@ -65,22 +46,22 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     hasGoals: state.goals.length > 0,
     selectedGoal: state.goals.find(goal => goal.id === state.selectedGoalId),
   })),
+  async completeGoalDay(goalDay: GoalDay) {
+    const { selectedGoalId, goals, persist } = get();
+    if (!selectedGoalId) throw new error.DeveloperError('No goal selected');
+    const goalIndex = goals.findIndex(goal => goal.id === selectedGoalId);
+    const day = goals[goalIndex].days.find(day => day.date === goalDay.date);
+    if (!day) throw new error.DeveloperError('Day not found');
+    if (!isToday(parseISO(day.date)) && !isYesterday(parseISO(day.date)))
+      throw new error.UserError('Cannot complete day', 'You can only complete today or yesterday.');
+    completeGoalDay(goals[goalIndex], day.date, false);
+    set({ goals });
+    await persist();
+  },
   async createGoal(params) {
     const { selectedGoalId, persist } = get();
-    const dateGoal = new Date(params.date);
-    const goal: Goal = {
-      id: Date.now().toString(),
-      description: params.description,
-      useCoins: params.useCoins,
-      coins: params.coins,
-      days: Array.from({ length: params.days }, (_, index) => {
-        return {
-          date: date.addDays(dateGoal, index).toISOString().split('T')[0],
-          status: index === 0 ? 'pending_today' : 'pending',
-          isBought: false,
-        };
-      }),
-    };
+    const goal = createGoal(params);
+    console.log('goal', goal);
     set(state => ({
       goals: [...state.goals, goal],
       selectedGoalId: selectedGoalId || goal.id,

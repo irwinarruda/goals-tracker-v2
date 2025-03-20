@@ -1,19 +1,17 @@
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
 export const date = Object.freeze({
-  addDays(date: Date, numDays?: number) {
-    if (!numDays) return date;
-    return new Date(date.getTime() + numDays * 24 * 60 * 60 * 1000);
-  },
   getWeekDay(date: Date) {
-    const ptDayNames = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-    return ptDayNames[date.getDay()];
+    return format(date, 'EEEE', { locale: ptBR });
   },
   getDayMonth(date: Date) {
-    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    return format(date, 'dd/MM');
   },
   getDayMonthYear(date: Date) {
-    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    return format(date, 'dd/MM/yyyy');
   },
   toDate(date: string) {
-    return new Date(date);
+    return parseISO(date);
   },
 });

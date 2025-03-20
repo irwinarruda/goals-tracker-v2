@@ -1,3 +1,4 @@
+import { GoalDay } from 'goals-tracker/logic';
 import { colors, fontSizes, roundeds } from 'goals-tracker/tokens';
 import * as React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
@@ -5,35 +6,30 @@ import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
 import { date } from '~/app/utils/date';
 
-export type DayStatus = 'success' | 'error' | 'pending' | 'pending_today';
-
 export type DayCardProps = RectButtonProps & {
-  status: DayStatus;
-  isBought?: boolean;
-  count: number;
-  day: Date;
+  goalDay: GoalDay;
 };
 
 const cardMargin = 6;
 const activeScreenSize = Dimensions.get('window').width - 2 * 16 - 4 * cardMargin;
 const cardSize = activeScreenSize / 5;
-export function DayCard({ status, isBought, count, day, onPress }: DayCardProps) {
+export function DayCard({ goalDay, onPress }: DayCardProps) {
   return (
     <RectButton
       style={[
         styles.card,
         { width: cardSize, height: cardSize },
-        status === 'success' && styles.card_success,
-        status === 'error' && styles.card_error,
-        status === 'pending' && styles.card_pending,
-        status === 'pending_today' && styles.card_pending_today,
-        isBought && styles.is_bought,
+        goalDay.status === 'success' && styles.card_success,
+        goalDay.status === 'error' && styles.card_error,
+        goalDay.status === 'pending' && styles.card_pending,
+        goalDay.status === 'pending_today' && styles.card_pending_today,
+        goalDay.isBought && styles.is_bought,
       ]}
       onPress={onPress}
     >
-      <Text style={styles.day_count}>{count}</Text>
-      <Text style={styles.day_text}>{date.getWeekDay(day)}</Text>
-      <Text style={styles.day_number}>{date.getDayMonth(day)}</Text>
+      <Text style={styles.day_count}>{goalDay.count}</Text>
+      <Text style={styles.day_text}>{date.getWeekDay(new Date(goalDay.date))}</Text>
+      <Text style={styles.day_number}>{date.getDayMonth(new Date(goalDay.date))}</Text>
     </RectButton>
   );
 }
