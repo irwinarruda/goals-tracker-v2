@@ -31,7 +31,6 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     const data = await storage.get<GoalsSlice>('goalsSlice');
     if (!data) return;
     syncGoals(data.goals);
-    console.log(data.goals);
     set({ goals: data.goals, coins: data.coins, selectedGoalId: data.selectedGoalId });
     await persist();
   },
@@ -48,20 +47,20 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   })),
   async completeGoalDay(goalDay: GoalDay) {
     const { selectedGoalId, goals, persist } = get();
+    const cloneGoals = JSON.parse(JSON.stringify(goals)) as Goal[];
     if (!selectedGoalId) throw new error.DeveloperError('No goal selected');
-    const goalIndex = goals.findIndex(goal => goal.id === selectedGoalId);
-    const day = goals[goalIndex].days.find(day => day.date === goalDay.date);
+    const goalIndex = cloneGoals.findIndex(goal => goal.id === selectedGoalId);
+    const day = cloneGoals[goalIndex].days.find(day => day.date === goalDay.date);
     if (!day) throw new error.DeveloperError('Day not found');
     if (!isToday(parseISO(day.date)) && !isYesterday(parseISO(day.date)))
-      throw new error.UserError('Cannot complete day', 'You can only complete today or yesterday.');
-    completeGoalDay(goals[goalIndex], day.date, false);
-    set({ goals });
+      throw new error.UserError(`Cannot complete day ${day.count}`, 'You can only complete today or yesterday.');
+    completeGoalDay(cloneGoals[goalIndex], day.date, false);
+    set({ goals: cloneGoals });
     await persist();
   },
   async createGoal(params) {
     const { selectedGoalId, persist } = get();
     const goal = createGoal(params);
-    console.log('goal', goal);
     set(state => ({
       goals: [...state.goals, goal],
       selectedGoalId: selectedGoalId || goal.id,

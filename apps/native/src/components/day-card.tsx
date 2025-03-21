@@ -1,4 +1,4 @@
-import { GoalDay } from 'goals-tracker/logic';
+import { GoalDay, GoalDayStatus } from 'goals-tracker/logic';
 import { colors, fontSizes, roundeds } from 'goals-tracker/tokens';
 import * as React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
@@ -19,17 +19,17 @@ export function DayCard({ goalDay, onPress }: DayCardProps) {
       style={[
         styles.card,
         { width: cardSize, height: cardSize },
-        goalDay.status === 'success' && styles.card_success,
-        goalDay.status === 'error' && styles.card_error,
-        goalDay.status === 'pending' && styles.card_pending,
-        goalDay.status === 'pending_today' && styles.card_pending_today,
+        goalDay.status === GoalDayStatus.Success && styles.card_success,
+        goalDay.status === GoalDayStatus.Error && styles.card_error,
+        goalDay.status === GoalDayStatus.Pending && styles.card_pending,
+        goalDay.status === GoalDayStatus.PendingToday && styles.card_pending_today,
         goalDay.isBought && styles.is_bought,
       ]}
       onPress={onPress}
     >
       <Text style={styles.day_count}>{goalDay.count}</Text>
-      <Text style={styles.day_text}>{date.getWeekDay(new Date(goalDay.date))}</Text>
-      <Text style={styles.day_number}>{date.getDayMonth(new Date(goalDay.date))}</Text>
+      <Text style={styles.day_text}>{date.getWeekDay(date.normalizeTZ(date.toDate(goalDay.date)))}</Text>
+      <Text style={styles.day_number}>{date.getDayMonth(date.normalizeTZ(date.toDate(goalDay.date)))}</Text>
     </RectButton>
   );
 }

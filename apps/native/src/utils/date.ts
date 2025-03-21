@@ -1,9 +1,13 @@
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
 export const date = Object.freeze({
+  normalizeTZ(date: Date) {
+    const dtDateOnly = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
+    return dtDateOnly;
+  },
   getWeekDay(date: Date) {
-    return format(date, 'EEEE', { locale: ptBR });
+    const ptDayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    return ptDayNames[date.getDay()];
   },
   getDayMonth(date: Date) {
     return format(date, 'dd/MM');
