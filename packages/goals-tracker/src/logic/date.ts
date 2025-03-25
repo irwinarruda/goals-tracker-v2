@@ -1,6 +1,13 @@
-import { format, parseISO } from 'date-fns';
+import { addDays, format, isToday, isYesterday, parseISO, startOfDay, subDays } from 'date-fns';
 
-export const date = Object.freeze({
+export const date = {
+  isToday,
+  isYesterday,
+  startOfDay,
+  parseISO,
+  format,
+  addDays,
+  subDays,
   normalizeTZ(date: Date) {
     const dtDateOnly = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
     return dtDateOnly;
@@ -18,4 +25,7 @@ export const date = Object.freeze({
   toDate(date: string) {
     return parseISO(date);
   },
-});
+  formatISO(date: Date) {
+    return format(date, 'yyyy-MM-dd');
+  },
+};

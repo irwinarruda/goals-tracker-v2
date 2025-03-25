@@ -20,9 +20,15 @@ function HeaderLeft() {
 
 function HeaderRight() {
   const coins = useAppState(state => state.coins);
+  const canUseCoins = useAppState(state => state.canUseCoins);
+  const completeTodayGoalWithCoins = useAppState(state => state.completeTodayGoalWithCoins);
   const text = coins + (coins === 1 ? ' coin' : ' coins');
   return (
-    <ChipButton leftIcon={<Image source={require('~/assets/coin.svg')} style={{ width: 16, height: 16 }} />}>
+    <ChipButton
+      active={canUseCoins}
+      leftIcon={<Image source={require('~/assets/coin.svg')} style={{ width: 16, height: 16 }} />}
+      onPress={error.listenAsync(completeTodayGoalWithCoins)}
+    >
       {text}
     </ChipButton>
   );

@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
 import { ChangeGoal } from '~/app/components/change-goal';
+import { ConfirmComplete } from '~/app/components/confirm-complete';
 import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
 import { useAppState } from '~/app/states';
@@ -34,10 +35,11 @@ function AppLayout() {
           header: args => <Header {...args} />,
         }}
       />
-      <StatusBar style="light" />
       {isCreateGoalOpen && <CreateGoal />}
       {isChangeGoalOpen && <ChangeGoal />}
+      <ConfirmComplete />
       <Toast />
+      <StatusBar style="light" />
     </GestureHandlerRootView>
   );
 }

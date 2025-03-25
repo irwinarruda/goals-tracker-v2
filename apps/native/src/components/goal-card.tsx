@@ -1,9 +1,7 @@
-import { Goal } from 'goals-tracker/logic';
+import { date, Goal } from 'goals-tracker/logic';
 import { colors, fontSizes, roundeds } from 'goals-tracker/tokens';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
-
-import { date } from '~/app/utils/date';
 
 export type GoalCardProps = RectButtonProps & {
   goal: Goal;

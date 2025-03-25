@@ -1,3 +1,4 @@
+import { BusinessError } from 'goals-tracker/logic';
 import { colors, fontSizes } from 'goals-tracker/tokens';
 import Toast from 'react-native-toast-message';
 
@@ -43,8 +44,7 @@ export const error = {
     }) as T;
   },
   handle(error: unknown) {
-    console.log('error', error);
-    if (error instanceof UserError) {
+    if (error instanceof UserError || error instanceof BusinessError) {
       Toast.show({
         position: 'bottom',
         type: 'info',
@@ -61,6 +61,7 @@ export const error = {
           color: colors['black'],
         },
       });
+      console.log('error', error);
     } else if (error instanceof DeveloperError) {
       Toast.show({
         position: 'bottom',
