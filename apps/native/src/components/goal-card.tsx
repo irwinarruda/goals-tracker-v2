@@ -11,21 +11,23 @@ export function GoalCard(props: GoalCardProps) {
   const goal = props.goal;
   return (
     <RectButton {...props} style={[styles.card, props.style]}>
-      <View style={styles.title_container}>
-        <Text style={styles.title_text}>{goal.description}</Text>
-      </View>
-      <View style={styles.info_container}>
-        <View style={styles.info_item}>
-          <Text style={styles.info_title}>Duration</Text>
-          <Text style={styles.info_value}>{goal.days.length}</Text>
+      <View accessibilityRole="button" style={styles.card_view} accessible>
+        <View style={styles.title_container}>
+          <Text style={styles.title_text}>{goal.description}</Text>
         </View>
-        <View style={styles.info_item}>
-          <Text style={styles.info_title}>Start date</Text>
-          <Text style={styles.info_value}>{date.getDayMonthYear(date.toDate(goal.days[0].date))}</Text>
-        </View>
-        <View style={styles.info_item}>
-          <Text style={styles.info_title}>Coins</Text>
-          <Text style={styles.info_value}>{goal.coins}</Text>
+        <View style={styles.info_container}>
+          <View style={styles.info_item}>
+            <Text style={styles.info_title}>Duration</Text>
+            <Text style={styles.info_value}>{goal.days.length}</Text>
+          </View>
+          <View style={styles.info_item}>
+            <Text style={styles.info_title}>Start date</Text>
+            <Text style={styles.info_value}>{date.getDayMonthYear(date.toDate(goal.days[0].date))}</Text>
+          </View>
+          <View style={styles.info_item}>
+            <Text style={styles.info_title}>Coins</Text>
+            <Text style={styles.info_value}>{goal.coins}</Text>
+          </View>
         </View>
       </View>
     </RectButton>
@@ -36,11 +38,14 @@ GoalCard.height = 82;
 
 const styles = StyleSheet.create({
   card: {
-    alignItems: 'stretch',
     borderColor: colors['gray-300'],
     borderRadius: roundeds['md'],
     borderWidth: 1,
+  },
+  card_view: {
+    alignItems: 'stretch',
     justifyContent: 'center',
+    zIndex: -1,
   },
   info_container: {
     flexDirection: 'row',
@@ -67,7 +72,6 @@ const styles = StyleSheet.create({
     marginTop: -1,
     paddingHorizontal: 13,
     paddingVertical: 4,
-    zIndex: -1,
   },
   title_text: {
     color: colors['white'],

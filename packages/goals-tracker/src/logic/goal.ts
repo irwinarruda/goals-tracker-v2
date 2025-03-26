@@ -89,9 +89,9 @@ export function createGoal(params: CreateGoalDTO): Goal {
  */
 export function completeGoalDay(goal: Goal, goalDate: string, isBought: boolean): void {
   const day = goal.days.find(day => day.date === goalDate);
-  if (!day) throw new error.BusinessError('Day not found');
+  if (!day) throw new error.BusinessError('Day is not found');
   if (day.status === GoalDayStatus.Success) {
-    throw new error.BusinessError('Day already completed');
+    throw new error.BusinessError('Day is already completed');
   }
   const dayDate = date.toDate(day.date);
   if (!date.isToday(dayDate) && !date.isYesterday(dayDate)) {
@@ -161,7 +161,7 @@ export function syncDays(goal: Goal): void {
     const day = goal.days[i];
     const dayDate = date.startOfDay(date.parseISO(day.date));
     if (day.status === GoalDayStatus.Success) continue;
-    if (isBefore(dayDate, today)) {
+    if (date.isBefore(dayDate, today)) {
       if (day.status !== GoalDayStatus.Error) {
         goal.days[i] = {
           ...day,

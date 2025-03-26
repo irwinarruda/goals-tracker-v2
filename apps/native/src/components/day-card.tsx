@@ -1,7 +1,7 @@
 import { date, GoalDay, GoalDayStatus } from 'goals-tracker/logic';
 import { colors, fontSizes, roundeds } from 'goals-tracker/tokens';
 import * as React from 'react';
-import { Dimensions, StyleSheet, Text } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 
 export type DayCardProps = RectButtonProps & {
@@ -16,18 +16,27 @@ export function DayCard({ goalDay, onPress }: DayCardProps) {
     <RectButton
       style={[
         styles.card,
-        { width: cardSize, height: cardSize },
         goalDay.status === GoalDayStatus.Success && styles.card_success,
         goalDay.status === GoalDayStatus.Error && styles.card_error,
         goalDay.status === GoalDayStatus.Pending && styles.card_pending,
         goalDay.status === GoalDayStatus.PendingToday && styles.card_pending_today,
-        goalDay.isBought && styles.is_bought,
       ]}
       onPress={onPress}
     >
-      <Text style={styles.day_count}>{goalDay.count}</Text>
-      <Text style={styles.day_text}>{date.getWeekDay(date.normalizeTZ(date.toDate(goalDay.date)))}</Text>
-      <Text style={styles.day_number}>{date.getDayMonth(date.normalizeTZ(date.toDate(goalDay.date)))}</Text>
+      <View
+        accessibilityRole="button"
+        style={[
+          styles.card_view,
+          goalDay.status === GoalDayStatus.PendingToday && styles.card_view_pending_today,
+          goalDay.isBought && styles.card_view_is_bought,
+          { width: cardSize, height: cardSize },
+        ]}
+        accessible
+      >
+        <Text style={styles.day_count}>{goalDay.count}</Text>
+        <Text style={styles.day_text}>{date.getWeekDay(date.normalizeTZ(date.toDate(goalDay.date)))}</Text>
+        <Text style={styles.day_number}>{date.getDayMonth(date.normalizeTZ(date.toDate(goalDay.date)))}</Text>
+      </View>
     </RectButton>
   );
 }
@@ -37,10 +46,8 @@ DayCard.cardMargin = cardMargin;
 
 const styles = StyleSheet.create({
   card: {
-    alignItems: 'center',
     borderRadius: roundeds['lg'],
     fontSize: fontSizes['md'],
-    justifyContent: 'center',
     textAlign: 'center',
   },
   card_error: {
@@ -51,11 +58,23 @@ const styles = StyleSheet.create({
   },
   card_pending_today: {
     backgroundColor: colors['gray-500'],
-    borderColor: colors['blue-300'],
-    borderWidth: 4,
   },
   card_success: {
     backgroundColor: colors['green-500'],
+  },
+  card_view: {
+    alignItems: 'center',
+    borderRadius: roundeds['lg'],
+    justifyContent: 'center',
+    zIndex: -1,
+  },
+  card_view_is_bought: {
+    borderColor: colors['yellow-500'],
+    borderWidth: 4,
+  },
+  card_view_pending_today: {
+    borderColor: colors['blue-300'],
+    borderWidth: 4,
   },
   day_count: {
     color: 'white',
@@ -71,9 +90,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: fontSizes['2xs'],
     fontWeight: 'semibold',
-  },
-  is_bought: {
-    borderColor: colors['yellow-500'],
-    borderWidth: 4,
   },
 });

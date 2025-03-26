@@ -15,12 +15,10 @@ import { Header } from '~/app/components/header';
 import { useAppState } from '~/app/states';
 
 function AppLayout() {
-  const isCreateGoalOpen = useAppState(state => state.isCreateGoalOpen);
-  const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
-  const prepare = useAppState(state => state.prepare);
+  const sync = useAppState(state => state.sync);
 
   useEffect(() => {
-    prepare();
+    sync();
   }, []);
 
   return (
@@ -35,8 +33,8 @@ function AppLayout() {
           header: args => <Header {...args} />,
         }}
       />
-      {isCreateGoalOpen && <CreateGoal />}
-      {isChangeGoalOpen && <ChangeGoal />}
+      <CreateGoal />
+      <ChangeGoal />
       <ConfirmComplete />
       <Toast />
       <StatusBar style="light" />

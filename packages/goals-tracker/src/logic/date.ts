@@ -1,7 +1,8 @@
-import { addDays, format, isToday, isYesterday, parseISO, startOfDay, subDays } from 'date-fns';
+import { addDays, format, isBefore, isToday, isYesterday, parseISO, startOfDay, subDays } from 'date-fns';
 
 export const date = {
   isToday,
+  isBefore,
   isYesterday,
   startOfDay,
   parseISO,

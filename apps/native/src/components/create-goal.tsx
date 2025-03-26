@@ -2,7 +2,7 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheet
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Button } from 'goals-tracker/native';
 import { colors } from 'goals-tracker/tokens';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { Text, View } from 'react-native';
 import * as v from 'valibot';
@@ -56,7 +56,8 @@ export function CreateGoal() {
     },
   });
   const useCoins = useWatch({ control, name: 'useCoins' });
-  const onGoalClose = useAppState(state => state.onCreateGoalClose);
+  const isCreateGoalOpen = useAppState(state => state.isCreateGoalOpen);
+  const onCreateGoalClose = useAppState(state => state.onCreateGoalClose);
   const createGoal = useAppState(state => state.createGoal);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -77,6 +78,13 @@ export function CreateGoal() {
     triggerFn: trigger,
   });
 
+  useEffect(() => {
+    if (bottomSheetRef.current) {
+      if (!isCreateGoalOpen) bottomSheetRef.current.close();
+      else bottomSheetRef.current.expand();
+    }
+  }, [isCreateGoalOpen]);
+
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
@@ -85,10 +93,11 @@ export function CreateGoal() {
         backgroundColor: colors['pink-500'],
         width: 50,
       }}
+      index={-1}
       ref={bottomSheetRef}
       snapPoints={[400]}
       enablePanDownToClose
-      onClose={onGoalClose}
+      onClose={onCreateGoalClose}
     >
       <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
         <Text className="text-2xl text-gray-700">Create Goal</Text>

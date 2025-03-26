@@ -10,13 +10,14 @@ import {
 } from 'goals-tracker/logic';
 import { compute } from 'zustand-computed-state';
 
+import { clone } from '~/app/utils/clone';
 import { error } from '~/app/utils/error';
 import { storage } from '~/app/utils/storage';
 
 import { AppState } from '.';
 
 export type GoalsSlice = {
-  prepare: () => Promise<void>;
+  sync: () => Promise<void>;
   persist: () => Promise<void>;
   goals: Goal[];
   hasGoals: boolean;
@@ -37,7 +38,7 @@ export type GoalsSlice = {
 };
 
 export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
-  async prepare() {
+  async sync() {
     const { persist } = get();
     const data = await storage.get<GoalsSlice>('goalsSlice');
     if (!data) return;
@@ -50,7 +51,7 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     await storage.set('goalsSlice', { goals, coins, selectedGoalId });
   },
 
-  coins: 20,
+  coins: 0,
   goals: [],
   selectedGoalId: undefined,
   ...compute(get, state => {
@@ -68,28 +69,12 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       canUseCoins: canUseCoins,
     };
   }),
-  async completeGoalDay(goalDay: GoalDay) {
-    const { selectedGoalId, goals, coins, persist, fireAlert } = get();
-    if (!selectedGoalId) throw new error.DeveloperError('No goal selected');
-    const newGoals = JSON.parse(JSON.stringify(goals)) as Goal[];
-    if (date.isYesterday(date.toDate(goalDay.date))) {
-      const completed = await fireAlert({
-        title: 'Warning!',
-        message: "Are you sure you want to change yesterday's goal?",
-      });
-      if (!completed) return;
-    }
-    const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoalId);
-    completeGoalDay(newGoals[goalIndex], goalDay.date, false);
-    set({ goals: newGoals, coins: coins + 1 });
-    await persist();
-  },
   async createGoal(params) {
-    const { selectedGoalId, persist } = get();
+    const { persist } = get();
     const goal = createGoal(params);
     set(state => ({
       goals: [...state.goals, goal],
-      selectedGoalId: selectedGoalId || goal.id,
+      selectedGoalId: goal.id,
       isCreateGoalOpen: false,
     }));
     await persist();
@@ -102,9 +87,29 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     await persist();
   },
 
+  async completeGoalDay(goalDay: GoalDay) {
+    const { selectedGoalId, goals, coins, persist, fireAlert } = get();
+    if (!selectedGoalId) throw new error.DeveloperError('No goal selected');
+    if (date.isYesterday(date.toDate(goalDay.date))) {
+      const completed = await fireAlert({
+        title: 'Warning!',
+        message: "Are you sure you want to change yesterday's goal?",
+      });
+      if (!completed) return;
+    }
+    const newGoals = clone(goals);
+    const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoalId);
+    completeGoalDay(newGoals[goalIndex], goalDay.date, false);
+    set({ goals: newGoals, coins: coins + 1 });
+    await persist();
+  },
   async completeTodayGoalWithCoins() {
     const { selectedGoal, canUseCoins, coins, goals, persist, fireAlert } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
+    const today = date.formatISO(date.startOfDay(new Date()));
+    const todayDay = selectedGoal.days.find(day => day.date === today);
+    if (!todayDay) throw new error.UserError('Today not found');
+    if (todayDay.status !== GoalDayStatus.PendingToday) throw new error.UserError("Today's goal is already completed");
     if (!canUseCoins)
       throw new error.UserError('Not enough coins', `You need ${selectedGoal.coins} coins to complete this goal.`);
     const coinsAfter = coins - selectedGoal.coins!;
@@ -114,9 +119,8 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     });
     if (!completed) return;
 
-    const newGoals = JSON.parse(JSON.stringify(goals)) as Goal[];
+    const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
-    const today = date.formatISO(date.startOfDay(new Date()));
     completeGoalDay(newGoals[goalIndex], today, true);
     set({ goals: newGoals, coins: coinsAfter });
     await persist();

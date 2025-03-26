@@ -13,6 +13,7 @@ export default function Native() {
   const selectedGoal = useAppState(state => state.selectedGoal);
   const onGoalOpen = useAppState(state => state.onCreateGoalOpen);
   const completeGoalDay = useAppState(state => state.completeGoalDay);
+  const sync = useAppState(state => state.sync);
 
   async function onDayPress(goalDay: GoalDay) {
     await completeGoalDay(goalDay);
@@ -41,6 +42,7 @@ export default function Native() {
           data={selectedGoal.days}
           estimatedItemSize={100}
           numColumns={5}
+          refreshing={selectedGoal.days.length === 0}
           renderItem={({ item }) => {
             return (
               <View
@@ -52,6 +54,7 @@ export default function Native() {
               </View>
             );
           }}
+          onRefresh={error.listenAsync(sync)}
         />
       </View>
       <FAB source={require('~/assets/plus.svg')} onPress={onGoalOpen} />

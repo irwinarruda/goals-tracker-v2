@@ -5,7 +5,7 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { colors } from 'goals-tracker/tokens';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
 
 import { useAppState } from '~/app/states';
@@ -23,6 +23,7 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 
 export function ChangeGoal() {
   const goals = useAppState(state => state.goals);
+  const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
   const onChangeGoalClose = useAppState(state => state.onChangeGoalClose);
   const changeGoal = useAppState(state => state.changeGoal);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -34,6 +35,13 @@ export function ChangeGoal() {
     await changeGoal(id);
   }
 
+  useEffect(() => {
+    if (bottomSheetRef.current) {
+      if (!isChangeGoalOpen) bottomSheetRef.current.close();
+      else bottomSheetRef.current.expand();
+    }
+  }, [isChangeGoalOpen]);
+
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
@@ -42,6 +50,7 @@ export function ChangeGoal() {
         backgroundColor: colors['pink-500'],
         width: 50,
       }}
+      index={-1}
       ref={bottomSheetRef}
       snapPoints={[snapSize]}
       style={{ width: '100%' }}
