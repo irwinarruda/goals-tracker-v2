@@ -47,7 +47,7 @@ export default function Native() {
             return (
               <View
                 className="flex-1 items-center justify-center"
-                key={item.date.toString()}
+                key={item.date}
                 style={{ paddingTop: DayCard.cardMargin }}
               >
                 <DayCard goalDay={item} onPress={() => error.listenAsync(onDayPress)(item)} />

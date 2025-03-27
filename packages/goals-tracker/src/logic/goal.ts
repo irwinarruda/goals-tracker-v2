@@ -20,6 +20,7 @@ export interface GoalDay {
   date: string;
   status: GoalDayStatus;
   isBought: boolean;
+  note?: string;
 }
 
 export interface Goal {
@@ -85,9 +86,10 @@ export function createGoal(params: CreateGoalDTO): Goal {
  * @param {Goal} goal - The goal to update
  * @param {string} goalDate - The date to find in yyyy-MM-dd format
  * @param {boolean} isBought - Whether the completion is bought
+ * @param {string} note - Optional note for the goal day
  * @returns {void}
  */
-export function completeGoalDay(goal: Goal, goalDate: string, isBought: boolean): void {
+export function completeGoalDay(goal: Goal, goalDate: string, isBought: boolean, note?: string): void {
   const day = goal.days.find(day => day.date === goalDate);
   if (!day) throw new error.BusinessError('Day is not found');
   if (day.status === GoalDayStatus.Success) {
@@ -111,6 +113,7 @@ export function completeGoalDay(goal: Goal, goalDate: string, isBought: boolean)
         ...day,
         status: GoalDayStatus.Success,
         isBought: isBought,
+        note: note,
       };
       break;
     }

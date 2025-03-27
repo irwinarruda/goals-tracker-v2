@@ -88,8 +88,12 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   },
 
   async completeGoalDay(goalDay: GoalDay) {
-    const { selectedGoalId, goals, coins, persist, fireAlert } = get();
-    if (!selectedGoalId) throw new error.DeveloperError('No goal selected');
+    const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay } = get();
+    if (!selectedGoal) throw new error.DeveloperError('No goal selected');
+    const todayDay = selectedGoal.days.find(day => day.date === goalDay.date);
+    if (!todayDay) throw new error.UserError('Today not found');
+    if (todayDay.status === GoalDayStatus.Success) throw new error.UserError('Goal is already completed');
+
     if (date.isYesterday(date.toDate(goalDay.date))) {
       const completed = await fireAlert({
         title: 'Warning!',
@@ -97,19 +101,22 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       });
       if (!completed) return;
     }
+    const { confirmed, note } = await openConfirmDay({ goalDay });
+    if (!confirmed) return;
+
     const newGoals = clone(goals);
-    const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoalId);
-    completeGoalDay(newGoals[goalIndex], goalDay.date, false);
+    const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
+    completeGoalDay(newGoals[goalIndex], goalDay.date, false, note);
     set({ goals: newGoals, coins: coins + 1 });
     await persist();
   },
   async completeTodayGoalWithCoins() {
-    const { selectedGoal, canUseCoins, coins, goals, persist, fireAlert } = get();
+    const { selectedGoal, canUseCoins, coins, goals, persist, fireAlert, openConfirmDay } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
     const today = date.formatISO(date.startOfDay(new Date()));
     const todayDay = selectedGoal.days.find(day => day.date === today);
     if (!todayDay) throw new error.UserError('Today not found');
-    if (todayDay.status !== GoalDayStatus.PendingToday) throw new error.UserError("Today's goal is already completed");
+    if (todayDay.status === GoalDayStatus.Success) throw new error.UserError("Today's goal is already completed");
     if (!canUseCoins)
       throw new error.UserError('Not enough coins', `You need ${selectedGoal.coins} coins to complete this goal.`);
     const coinsAfter = coins - selectedGoal.coins!;
@@ -118,10 +125,12 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       message: `This will cost ${selectedGoal.coins} coins. You will have ${coinsAfter} coins left. Do you want to proceed?`,
     });
     if (!completed) return;
+    const { confirmed, note } = await openConfirmDay({ goalDay: todayDay });
+    if (!confirmed) return;
 
     const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
-    completeGoalDay(newGoals[goalIndex], today, true);
+    completeGoalDay(newGoals[goalIndex], today, true, note);
     set({ goals: newGoals, coins: coinsAfter });
     await persist();
   },

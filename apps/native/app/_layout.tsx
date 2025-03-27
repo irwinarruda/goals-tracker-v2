@@ -10,6 +10,7 @@ import Toast from 'react-native-toast-message';
 
 import { ChangeGoal } from '~/app/components/change-goal';
 import { ConfirmComplete } from '~/app/components/confirm-complete';
+import { ConfirmDay } from '~/app/components/confirm-day';
 import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
 import { useAppState } from '~/app/states';
@@ -35,6 +36,7 @@ function AppLayout() {
       />
       <CreateGoal />
       <ChangeGoal />
+      <ConfirmDay />
       <ConfirmComplete />
       <Toast />
       <StatusBar style="light" />
