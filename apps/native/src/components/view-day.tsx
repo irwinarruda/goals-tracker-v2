@@ -15,15 +15,20 @@ import Markdown from 'react-native-markdown-display';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 
+const markdownTheme = {
+  primaryHeading: colors['pink-500'],
+  bodyText: colors['black'],
+};
+
 const styles = StyleSheet.create({
-  body: { color: colors['black'] },
-  heading1: { color: colors['pink-500'] },
-  heading2: { color: colors['pink-500'] },
-  heading3: { color: colors['pink-500'] },
-  heading4: { color: colors['pink-500'] },
-  heading5: { color: colors['pink-500'] },
-  heading6: { color: colors['pink-500'] },
-  paragraph: { color: colors['black'] },
+  body: { color: markdownTheme.bodyText },
+  heading1: { color: markdownTheme.primaryHeading },
+  heading2: { color: markdownTheme.primaryHeading },
+  heading3: { color: markdownTheme.primaryHeading },
+  heading4: { color: markdownTheme.primaryHeading },
+  heading5: { color: markdownTheme.primaryHeading },
+  heading6: { color: markdownTheme.primaryHeading },
+  paragraph: { color: markdownTheme.bodyText },
 });
 
 function renderBackdrop(props: BottomSheetBackdropProps) {
@@ -112,7 +117,13 @@ function goalDayStatusToColor(status: GoalDayStatus) {
 
 function ViewDayUI({ goalDay }: { goalDay: GoalDay }) {
   return (
-    <View className="rounded-lg p-2" style={{ backgroundColor: goalDayStatusToColor(goalDay.status) }}>
+    <View
+      className="rounded-lg p-2"
+      style={{
+        backgroundColor: goalDayStatusToColor(goalDay.status),
+        ...(goalDay.isBought && { borderColor: colors['yellow-500'], borderWidth: 4 }),
+      }}
+    >
       <View className="items-center">
         <View className="flex-row gap-1">
           <Text className="text-md font-bold text-white">Day</Text>
