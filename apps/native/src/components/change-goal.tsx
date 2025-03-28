@@ -58,7 +58,7 @@ export function ChangeGoal() {
       onClose={onChangeGoalClose}
     >
       <BottomSheetView className="w-full items-stretch px-4" style={{ paddingHorizontal: config.screenPadding }}>
-        <Text className="text-2xl text-gray-700">Change Goal</Text>
+        <Text className="text-2xl text-black">Change Goal</Text>
         <View className="pt-3" />
       </BottomSheetView>
       <View style={{ height: listSize }}>

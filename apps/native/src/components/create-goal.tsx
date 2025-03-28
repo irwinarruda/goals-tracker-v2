@@ -100,7 +100,7 @@ export function CreateGoal() {
       onClose={onCreateGoalClose}
     >
       <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
-        <Text className="text-2xl text-gray-700">Create Goal</Text>
+        <Text className="text-2xl text-black">Create Goal</Text>
         <View className="pt-5" />
         <FormInput control={control} label="Description" name="description" placeholder="Enter a goal description" />
         <View className="flex-row gap-5 pt-5">
