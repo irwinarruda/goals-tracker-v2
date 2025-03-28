@@ -106,7 +106,7 @@ function goalDayStatusToColor(status: GoalDayStatus) {
     case GoalDayStatus.PendingToday:
       return colors['blue-500'];
     default:
-      return 'Unknown';
+      return colors['gray-500']; // Fallback to a safe default color
   }
 }
 
