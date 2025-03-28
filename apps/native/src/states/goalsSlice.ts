@@ -7,6 +7,7 @@ import {
   GoalDay,
   GoalDayStatus,
   syncGoals,
+  updateGoalDayNote,
 } from 'goals-tracker/logic';
 import { compute } from 'zustand-computed-state';
 
@@ -36,9 +37,14 @@ export type GoalsSlice = {
   onChangeGoalClose(): void;
   completeTodayGoalWithCoins(): Promise<void>;
   isViewDayOpen: boolean;
-  viewDayGoalDay?: GoalDay;
+  viewGoalDayDate?: string;
+  viewGoalDay?: GoalDay;
   onViewDayOpen(goalDay: GoalDay): void;
   onViewDayClose(): void;
+  updateGoalDayNote(goalDay: GoalDay, note: string): Promise<void>;
+  isAddNoteOpen: boolean;
+  onAddNoteOpen(): void;
+  onAddNoteClose(): void;
 };
 
 export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
@@ -61,16 +67,24 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   ...compute(get, state => {
     const selectedGoal = state.goals.find(goal => goal.id === state.selectedGoalId);
     let canUseCoins = false;
+    let viewGoalDay = undefined;
+
     if (selectedGoal) {
       const todayDay = selectedGoal.days.find(day => date.isToday(date.toDate(day.date)));
       if (todayDay && todayDay.status === GoalDayStatus.PendingToday)
         canUseCoins = selectedGoal.useCoins && state.coins >= selectedGoal.coins!;
       else canUseCoins = false;
+
+      if (state.viewGoalDayDate) {
+        viewGoalDay = selectedGoal.days.find(day => day.date === state.viewGoalDayDate);
+      }
     }
+
     return {
       hasGoals: state.goals.length > 0,
-      selectedGoal: selectedGoal,
-      canUseCoins: canUseCoins,
+      selectedGoal,
+      canUseCoins,
+      viewGoalDay,
     };
   }),
   async createGoal(params) {
@@ -142,6 +156,17 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     await persist();
   },
 
+  async updateGoalDayNote(goalDay, note) {
+    const { selectedGoal, goals, persist } = get();
+    if (!selectedGoal) throw new error.DeveloperError('No goal selected');
+
+    const newGoals = clone(goals);
+    const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
+    updateGoalDayNote(newGoals[goalIndex], goalDay.date, note);
+    set({ goals: newGoals, isAddNoteOpen: false });
+    await persist();
+  },
+
   isCreateGoalOpen: false,
   onCreateGoalOpen() {
     set({ isCreateGoalOpen: true });
@@ -161,13 +186,21 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   },
 
   isViewDayOpen: false,
-  viewDayGoalDay: undefined,
+  viewGoalDayDate: undefined,
   onViewDayOpen(goalDay) {
     const { selectedGoal } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
-    set({ isViewDayOpen: true, viewDayGoalDay: goalDay });
+    set({ isViewDayOpen: true, viewGoalDayDate: goalDay.date });
   },
   onViewDayClose() {
-    set({ isViewDayOpen: false, viewDayGoalDay: undefined });
+    set({ isViewDayOpen: false, viewGoalDayDate: undefined });
+  },
+
+  isAddNoteOpen: false,
+  onAddNoteOpen() {
+    set({ isAddNoteOpen: true });
+  },
+  onAddNoteClose() {
+    set({ isAddNoteOpen: false });
   },
 });
