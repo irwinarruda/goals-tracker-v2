@@ -77,7 +77,11 @@ export function ViewDay() {
 }
 
 const AddNoteFormSchema = v.object({
-  note: v.string(),
+  note: v.pipe(
+    v.string(),
+    v.minLength(1, 'Please enter a note'),
+    v.maxLength(500, 'Note is too long (maximum 500 characters)'),
+  ),
 });
 
 type AddNoteForm = v.InferOutput<typeof AddNoteFormSchema>;

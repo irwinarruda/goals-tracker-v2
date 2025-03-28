@@ -192,6 +192,9 @@ export function updateGoalDayNote(goal: Goal, goalDate: string, note: string): v
   if (day.status !== GoalDayStatus.Success) {
     throw new error.BusinessError('Cannot add note to incomplete day');
   }
+  if (note === day.note) {
+    throw new error.BusinessError('Note is the same as before');
+  }
 
   for (let i = 0; i < goal.days.length; i++) {
     const day = goal.days[i];
