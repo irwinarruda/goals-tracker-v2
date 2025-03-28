@@ -35,6 +35,10 @@ export type GoalsSlice = {
   onChangeGoalOpen(): void;
   onChangeGoalClose(): void;
   completeTodayGoalWithCoins(): Promise<void>;
+  isViewDayOpen: boolean;
+  viewDayGoalDay?: GoalDay;
+  onViewDayOpen(goalDay: GoalDay): void;
+  onViewDayClose(): void;
 };
 
 export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
@@ -88,11 +92,14 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   },
 
   async completeGoalDay(goalDay: GoalDay) {
-    const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay } = get();
+    const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay, onViewDayOpen } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
     const todayDay = selectedGoal.days.find(day => day.date === goalDay.date);
     if (!todayDay) throw new error.UserError('Today not found');
-    if (todayDay.status === GoalDayStatus.Success) throw new error.UserError('Goal is already completed');
+    if (todayDay.status === GoalDayStatus.Success) {
+      onViewDayOpen(goalDay);
+      return;
+    }
 
     if (date.isYesterday(date.toDate(goalDay.date))) {
       const completed = await fireAlert({
@@ -151,5 +158,16 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   },
   onChangeGoalClose() {
     set({ isChangeGoalOpen: false });
+  },
+
+  isViewDayOpen: false,
+  viewDayGoalDay: undefined,
+  onViewDayOpen(goalDay) {
+    const { selectedGoal } = get();
+    if (!selectedGoal) throw new error.DeveloperError('No goal selected');
+    set({ isViewDayOpen: true, viewDayGoalDay: goalDay });
+  },
+  onViewDayClose() {
+    set({ isViewDayOpen: false, viewDayGoalDay: undefined });
   },
 });

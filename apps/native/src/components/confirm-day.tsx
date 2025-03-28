@@ -69,7 +69,7 @@ export function ConfirmDay() {
     >
       <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
         <View className="flex-row items-center justify-between">
-          <Text className="text-2xl text-gray-700">Confirm Day</Text>
+          <Text className="text-2xl text-black">Confirm Day</Text>
           <ConfirmData confirmDayData={confirmDayData} />
         </View>
         <View className="pt-5" />

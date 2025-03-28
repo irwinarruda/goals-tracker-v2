@@ -13,6 +13,7 @@ import { ConfirmComplete } from '~/app/components/confirm-complete';
 import { ConfirmDay } from '~/app/components/confirm-day';
 import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
+import { ViewDay } from '~/app/components/view-day';
 import { useAppState } from '~/app/states';
 
 function AppLayout() {
@@ -38,6 +39,7 @@ function AppLayout() {
       <ChangeGoal />
       <ConfirmDay />
       <ConfirmComplete />
+      <ViewDay />
       <Toast />
       <StatusBar style="light" />
     </GestureHandlerRootView>

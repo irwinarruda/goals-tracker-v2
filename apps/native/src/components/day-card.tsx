@@ -11,7 +11,7 @@ export type DayCardProps = RectButtonProps & {
 const cardMargin = 6;
 const activeScreenSize = Dimensions.get('window').width - 2 * 16 - 4 * cardMargin;
 const cardSize = activeScreenSize / 5;
-export function DayCard({ goalDay, onPress }: DayCardProps) {
+export function DayCard({ goalDay, style, onPress }: DayCardProps) {
   return (
     <RectButton
       style={[
@@ -20,6 +20,7 @@ export function DayCard({ goalDay, onPress }: DayCardProps) {
         goalDay.status === GoalDayStatus.Error && styles.card_error,
         goalDay.status === GoalDayStatus.Pending && styles.card_pending,
         goalDay.status === GoalDayStatus.PendingToday && styles.card_pending_today,
+        style,
       ]}
       onPress={onPress}
     >

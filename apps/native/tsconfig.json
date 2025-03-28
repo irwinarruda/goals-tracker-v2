@@ -2,8 +2,9 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "resolvePackageJsonImports": false,
     "strictNullChecks": true,
     "skipLibCheck": true,
     "paths": {
