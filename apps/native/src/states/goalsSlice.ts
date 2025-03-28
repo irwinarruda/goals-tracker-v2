@@ -108,26 +108,33 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   async completeGoalDay(goalDay: GoalDay) {
     const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay, onViewDayOpen } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
-    const todayDay = selectedGoal.days.find(day => day.date === goalDay.date);
-    if (!todayDay) throw new error.UserError('Today not found');
-    if (todayDay.status === GoalDayStatus.Success) {
+    const selectedDay = selectedGoal.days.find(day => day.date === goalDay.date);
+    if (!selectedDay) throw new error.UserError('The day was not found');
+    if (selectedDay.status === GoalDayStatus.Success) {
       onViewDayOpen(goalDay);
       return;
     }
 
-    if (date.isYesterday(date.toDate(goalDay.date))) {
+    let note;
+    if (date.isYesterday(date.toDate(selectedDay.date)) && selectedDay.status === GoalDayStatus.Error) {
       const completed = await fireAlert({
         title: 'Warning!',
         message: "Are you sure you want to change yesterday's goal?",
       });
       if (!completed) return;
+      const confirmDay = await openConfirmDay({ goalDay: selectedDay, isBought: false });
+      note = confirmDay.note;
+      if (!confirmDay.confirmed) return;
     }
-    const { confirmed, note } = await openConfirmDay({ goalDay });
-    if (!confirmed) return;
+    if (selectedDay.status === GoalDayStatus.PendingToday) {
+      const confirmDay = await openConfirmDay({ goalDay: selectedDay, isBought: false });
+      note = confirmDay.note;
+      if (!confirmDay.confirmed) return;
+    }
 
     const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
-    completeGoalDay(newGoals[goalIndex], goalDay.date, false, note);
+    completeGoalDay(newGoals[goalIndex], selectedDay.date, false, note);
     set({ goals: newGoals, coins: coins + 1 });
     await persist();
   },
@@ -146,7 +153,7 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       message: `This will cost ${selectedGoal.coins} coins. You will have ${coinsAfter} coins left. Do you want to proceed?`,
     });
     if (!completed) return;
-    const { confirmed, note } = await openConfirmDay({ goalDay: todayDay });
+    const { confirmed, note } = await openConfirmDay({ goalDay: todayDay, isBought: true });
     if (!confirmed) return;
 
     const newGoals = clone(goals);
@@ -193,7 +200,9 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     set({ isViewDayOpen: true, viewGoalDayDate: goalDay.date });
   },
   onViewDayClose() {
+    const { onAddNoteClose } = get();
     set({ isViewDayOpen: false, viewGoalDayDate: undefined });
+    onAddNoteClose();
   },
 
   isAddNoteOpen: false,

@@ -9,6 +9,7 @@ import { Text, View } from 'react-native';
 import * as v from 'valibot';
 
 import { AppSlices, useAppState } from '~/app/states';
+import { cn } from '~/app/utils/cn';
 import { config } from '~/app/utils/config';
 import { error } from '~/app/utils/error';
 
@@ -29,6 +30,7 @@ export function ConfirmDay() {
     handleSubmit,
     control,
     formState: { isSubmitting },
+    reset,
   } = useForm<ConfirmDayForm>({
     resolver: valibotResolver(ConfirmDayFormSchema),
     defaultValues: {
@@ -44,6 +46,11 @@ export function ConfirmDay() {
 
   async function onSubmit(data: ConfirmDayForm) {
     onConfirmDayConfirm(data.note);
+  }
+
+  function onClose() {
+    onConfirmDayCancel();
+    reset();
   }
 
   useEffect(() => {
@@ -65,7 +72,7 @@ export function ConfirmDay() {
       ref={bottomSheetRef}
       snapPoints={[400]}
       enablePanDownToClose
-      onClose={onConfirmDayCancel}
+      onClose={error.listen(onClose)}
     >
       <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
         <View className="flex-row items-center justify-between">
@@ -105,7 +112,9 @@ export function ConfirmDay() {
 function ConfirmData({ confirmDayData }: { confirmDayData: AppSlices['confirmDayData'] }) {
   if (!confirmDayData) return null;
   return (
-    <View className="-my-5 rounded-lg bg-green-500 p-2">
+    <View
+      className={cn('-my-5 rounded-lg bg-green-500 p-2', confirmDayData.isBought && 'border-[4px] border-yellow-500')}
+    >
       <View className="items-center">
         <View className="flex-row gap-1">
           <Text className="text-md font-bold text-white">Day</Text>
