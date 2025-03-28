@@ -11,6 +11,19 @@ export type DayCardProps = RectButtonProps & {
 const cardMargin = 6;
 const activeScreenSize = Dimensions.get('window').width - 2 * 16 - 4 * cardMargin;
 const cardSize = activeScreenSize / 5;
+/**
+ * Renders an interactive card representing a specific goal day.
+ *
+ * The DayCard component displays the goal day's count, weekday, and formatted date, adapting its visual style
+ * based on its status (such as success, error, pending, or pending today). It also accepts an optional custom style
+ * and triggers a press callback when interacted with.
+ *
+ * @param goalDay - Data for the goal day including date, count, status, and purchase state.
+ * @param style - Optional custom style overrides for the card.
+ * @param onPress - Callback invoked when the card is pressed.
+ *
+ * @returns A React element representing a pressable goal day card.
+ */
 export function DayCard({ goalDay, style, onPress }: DayCardProps) {
   return (
     <RectButton

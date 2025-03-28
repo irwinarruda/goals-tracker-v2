@@ -21,6 +21,17 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
   return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
 }
 
+/**
+ * Renders a bottom sheet modal that allows users to change the current goal.
+ *
+ * This component displays a title and a dynamically sized list of goal cards sourced from the application state.
+ * It calculates the dimensions of the bottom sheet based on the number of available goals and controls its open or
+ * closed state using a state flag. Selecting a goal triggers an asynchronous update, with built-in error handling,
+ * and the sheet supports swipe-to-close functionality.
+ *
+ * @example
+ * <ChangeGoal />
+ */
 export function ChangeGoal() {
   const goals = useAppState(state => state.goals);
   const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);

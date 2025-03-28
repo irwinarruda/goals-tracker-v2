@@ -39,6 +39,16 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
   return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
 }
 
+/**
+ * Renders a bottom sheet form for creating a new goal.
+ *
+ * This component displays a modal-like interface that allows users to enter a goal description, duration in days, and start date.
+ * It optionally accepts coin usage details, enabling an additional input for specifying coins if activated.
+ * The form is managed using react-hook-form with validation provided by valibot. Upon submission, numeric fields are converted appropriately
+ * and passed to a global handler to create the goal. The bottom sheet automatically expands or collapses based on a global state flag.
+ *
+ * @returns The JSX for the bottom sheet form.
+ */
 export function CreateGoal() {
   const {
     handleSubmit,

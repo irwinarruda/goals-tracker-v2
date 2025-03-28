@@ -24,6 +24,15 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
   return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
 }
 
+/**
+ * Renders a bottom sheet that allows users to confirm the day's goal with an optional note.
+ *
+ * This component uses a form, managed with react-hook-form and validated by a valibot schema, to capture a note. 
+ * It displays confirmation data alongside the note input and provides Cancel and Confirm actions. The bottom sheet's
+ * visibility is controlled via application state, automatically expanding when open and closing when not.
+ *
+ * @returns A JSX element representing the confirmation UI.
+ */
 export function ConfirmDay() {
   const {
     handleSubmit,

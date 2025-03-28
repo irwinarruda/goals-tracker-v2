@@ -26,10 +26,27 @@ const styles = StyleSheet.create({
   paragraph: { color: colors['black'] },
 });
 
+/**
+ * Renders a BottomSheetBackdrop that automatically disappears when the bottom sheet is closed.
+ *
+ * This function returns a BottomSheetBackdrop component with its `disappearsOnIndex`
+ * prop set to -1, ensuring that the backdrop is hidden when the bottom sheet's index is -1.
+ *
+ * @param props - The properties to apply to the BottomSheetBackdrop.
+ * @returns A React element representing the configured backdrop.
+ */
 function renderBackdrop(props: BottomSheetBackdropProps) {
   return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
 }
 
+/**
+ * Renders a bottom sheet modal displaying detailed information for a selected goal on a specific day.
+ *
+ * This React component uses a bottom sheet from the @gorhom/bottom-sheet library to conditionally display
+ * the details of a selected goal and its associated day information. The modal expands when the global
+ * state flag `isViewDayOpen` is true and closes when it is false. Its content is rendered only if both a 
+ * selected goal and corresponding day details are available.
+ */
 export function ViewDay() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { isViewDayOpen, selectedGoal, viewDayGoalDay, onViewDayClose } = useAppState();
@@ -62,6 +79,16 @@ export function ViewDay() {
   );
 }
 
+/**
+ * Renders a modal view displaying details for a specific day of a selected goal.
+ *
+ * This component shows the goal's description and its start date (derived from the first day in the goal's history),
+ * alongside visual status details using a dedicated UI component. It conditionally displays a markdown-formatted note
+ * if one exists for the day; otherwise, it presents a placeholder image and message indicating that no notes are available.
+ *
+ * @param selectedGoal - The goal object encompassing the description and associated days.
+ * @param viewDayGoalDay - The specific day's details for the goal, including any note.
+ */
 function ViewDayModal({ selectedGoal, viewDayGoalDay }: { selectedGoal: Goal; viewDayGoalDay: GoalDay }) {
   return (
     <>
@@ -95,6 +122,20 @@ function ViewDayModal({ selectedGoal, viewDayGoalDay }: { selectedGoal: Goal; vi
   );
 }
 
+/**
+ * Maps a goal day status to its corresponding color.
+ *
+ * Returns a specific color for each recognized status:
+ * - Success: green.
+ * - Error: pink.
+ * - Pending: gray.
+ * - PendingToday: blue.
+ *
+ * If the status is unrecognized, returns 'Unknown'.
+ *
+ * @param status - The goal day status to convert.
+ * @returns The color associated with the given status.
+ */
 function goalDayStatusToColor(status: GoalDayStatus) {
   switch (status) {
     case GoalDayStatus.Success:
@@ -106,10 +147,17 @@ function goalDayStatusToColor(status: GoalDayStatus) {
     case GoalDayStatus.PendingToday:
       return colors['blue-500'];
     default:
-      return colors['gray-500']; // Fallback to a safe default color
+      return 'Unknown';
   }
 }
 
+/**
+ * Renders a UI element displaying a goal day's status.
+ *
+ * This component shows the day count alongside formatted weekday and month/date information. The background color is set based on the goal day's status.
+ *
+ * @param goalDay - An object containing details of the goal day, including its status, count, and date.
+ */
 function ViewDayUI({ goalDay }: { goalDay: GoalDay }) {
   return (
     <View className="rounded-lg p-2" style={{ backgroundColor: goalDayStatusToColor(goalDay.status) }}>
@@ -129,6 +177,12 @@ function ViewDayUI({ goalDay }: { goalDay: GoalDay }) {
   );
 }
 
+/**
+ * Renders a visual divider.
+ *
+ * This component renders a horizontal line with padding above and below,
+ * typically used to separate sections within the UI.
+ */
 function Divider() {
   return (
     <>
