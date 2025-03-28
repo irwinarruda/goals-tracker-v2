@@ -179,3 +179,31 @@ export function syncDays(goal: Goal): void {
     }
   }
 }
+
+/**
+ * Updates a goal day note
+ * @param {Goal} goal - The goal to update
+ * @param {string} goalDate - The date to find in yyyy-MM-dd format
+ * @param {string} note - The note to add
+ */
+export function updateGoalDayNote(goal: Goal, goalDate: string, note: string): void {
+  const day = goal.days.find(day => day.date === goalDate);
+  if (!day) throw new error.BusinessError('Day is not found');
+  if (day.status !== GoalDayStatus.Success) {
+    throw new error.BusinessError('Cannot add note to incomplete day');
+  }
+  if (note === day.note) {
+    throw new error.BusinessError('Note is the same as before');
+  }
+
+  for (let i = 0; i < goal.days.length; i++) {
+    const day = goal.days[i];
+    if (day.date === goalDate) {
+      goal.days[i] = {
+        ...day,
+        note,
+      };
+      break;
+    }
+  }
+}

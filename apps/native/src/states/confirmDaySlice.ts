@@ -4,13 +4,14 @@ import { AppState } from '.';
 
 export type ConfirmDayDataDTO = {
   goalDay: GoalDay;
+  isBought: boolean;
 };
 
 export type ConfirmDaySlice = {
   isConfirmDayOpen: boolean;
   confirmDayResolver?: (value: { confirmed: boolean; note?: string }) => void;
   confirmDayData?: ConfirmDayDataDTO;
-  openConfirmDay: (data: { goalDay: GoalDay }) => Promise<{ confirmed: boolean; note?: string }>;
+  openConfirmDay: (data: { goalDay: GoalDay; isBought: boolean }) => Promise<{ confirmed: boolean; note?: string }>;
   onConfirmDayConfirm: (note: string) => void;
   onConfirmDayCancel: () => void;
 };

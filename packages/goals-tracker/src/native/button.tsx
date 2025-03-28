@@ -8,7 +8,11 @@ export interface ButtonProps extends RectButtonProps {}
 
 export function Button({ children, style, enabled, onPress }: ButtonProps) {
   return (
-    <RectButton enabled={enabled} style={[styles.button, !enabled && styles.button_disabled, style]} onPress={onPress}>
+    <RectButton
+      enabled={enabled}
+      style={[styles.button, enabled === false && styles.button_disabled, style]}
+      onPress={onPress}
+    >
       <View accessible accessibilityRole="button">
         <Text style={styles.text}>{children}</Text>
       </View>

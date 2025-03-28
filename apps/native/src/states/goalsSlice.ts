@@ -7,6 +7,7 @@ import {
   GoalDay,
   GoalDayStatus,
   syncGoals,
+  updateGoalDayNote,
 } from 'goals-tracker/logic';
 import { compute } from 'zustand-computed-state';
 
@@ -36,9 +37,14 @@ export type GoalsSlice = {
   onChangeGoalClose(): void;
   completeTodayGoalWithCoins(): Promise<void>;
   isViewDayOpen: boolean;
-  viewDayGoalDay?: GoalDay;
+  viewGoalDayDate?: string;
+  viewGoalDay?: GoalDay;
   onViewDayOpen(goalDay: GoalDay): void;
   onViewDayClose(): void;
+  updateGoalDayNote(goalDay: GoalDay, note: string): Promise<void>;
+  isAddNoteOpen: boolean;
+  onAddNoteOpen(): void;
+  onAddNoteClose(): void;
 };
 
 export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
@@ -61,16 +67,24 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   ...compute(get, state => {
     const selectedGoal = state.goals.find(goal => goal.id === state.selectedGoalId);
     let canUseCoins = false;
+    let viewGoalDay = undefined;
+
     if (selectedGoal) {
       const todayDay = selectedGoal.days.find(day => date.isToday(date.toDate(day.date)));
       if (todayDay && todayDay.status === GoalDayStatus.PendingToday)
         canUseCoins = selectedGoal.useCoins && state.coins >= selectedGoal.coins!;
       else canUseCoins = false;
+
+      if (state.viewGoalDayDate) {
+        viewGoalDay = selectedGoal.days.find(day => day.date === state.viewGoalDayDate);
+      }
     }
+
     return {
       hasGoals: state.goals.length > 0,
-      selectedGoal: selectedGoal,
-      canUseCoins: canUseCoins,
+      selectedGoal,
+      canUseCoins,
+      viewGoalDay,
     };
   }),
   async createGoal(params) {
@@ -94,26 +108,33 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   async completeGoalDay(goalDay: GoalDay) {
     const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay, onViewDayOpen } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
-    const todayDay = selectedGoal.days.find(day => day.date === goalDay.date);
-    if (!todayDay) throw new error.UserError('Today not found');
-    if (todayDay.status === GoalDayStatus.Success) {
+    const selectedDay = selectedGoal.days.find(day => day.date === goalDay.date);
+    if (!selectedDay) throw new error.UserError('The day was not found');
+    if (selectedDay.status === GoalDayStatus.Success) {
       onViewDayOpen(goalDay);
       return;
     }
 
-    if (date.isYesterday(date.toDate(goalDay.date))) {
+    let note;
+    if (date.isYesterday(date.toDate(selectedDay.date)) && selectedDay.status === GoalDayStatus.Error) {
       const completed = await fireAlert({
         title: 'Warning!',
         message: "Are you sure you want to change yesterday's goal?",
       });
       if (!completed) return;
+      const confirmDay = await openConfirmDay({ goalDay: selectedDay, isBought: false });
+      note = confirmDay.note;
+      if (!confirmDay.confirmed) return;
     }
-    const { confirmed, note } = await openConfirmDay({ goalDay });
-    if (!confirmed) return;
+    if (selectedDay.status === GoalDayStatus.PendingToday) {
+      const confirmDay = await openConfirmDay({ goalDay: selectedDay, isBought: false });
+      note = confirmDay.note;
+      if (!confirmDay.confirmed) return;
+    }
 
     const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
-    completeGoalDay(newGoals[goalIndex], goalDay.date, false, note);
+    completeGoalDay(newGoals[goalIndex], selectedDay.date, false, note);
     set({ goals: newGoals, coins: coins + 1 });
     await persist();
   },
@@ -132,13 +153,24 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       message: `This will cost ${selectedGoal.coins} coins. You will have ${coinsAfter} coins left. Do you want to proceed?`,
     });
     if (!completed) return;
-    const { confirmed, note } = await openConfirmDay({ goalDay: todayDay });
+    const { confirmed, note } = await openConfirmDay({ goalDay: todayDay, isBought: true });
     if (!confirmed) return;
 
     const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
     completeGoalDay(newGoals[goalIndex], today, true, note);
     set({ goals: newGoals, coins: coinsAfter });
+    await persist();
+  },
+
+  async updateGoalDayNote(goalDay, note) {
+    const { selectedGoal, goals, persist } = get();
+    if (!selectedGoal) throw new error.DeveloperError('No goal selected');
+
+    const newGoals = clone(goals);
+    const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
+    updateGoalDayNote(newGoals[goalIndex], goalDay.date, note);
+    set({ goals: newGoals, isAddNoteOpen: false });
     await persist();
   },
 
@@ -161,13 +193,23 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   },
 
   isViewDayOpen: false,
-  viewDayGoalDay: undefined,
+  viewGoalDayDate: undefined,
   onViewDayOpen(goalDay) {
     const { selectedGoal } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
-    set({ isViewDayOpen: true, viewDayGoalDay: goalDay });
+    set({ isViewDayOpen: true, viewGoalDayDate: goalDay.date });
   },
   onViewDayClose() {
-    set({ isViewDayOpen: false, viewDayGoalDay: undefined });
+    const { onAddNoteClose } = get();
+    set({ isViewDayOpen: false, viewGoalDayDate: undefined });
+    onAddNoteClose();
+  },
+
+  isAddNoteOpen: false,
+  onAddNoteOpen() {
+    set({ isAddNoteOpen: true });
+  },
+  onAddNoteClose() {
+    set({ isAddNoteOpen: false });
   },
 });

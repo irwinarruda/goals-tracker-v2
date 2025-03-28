@@ -4,16 +4,22 @@ import BottomSheet, {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
+import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Image } from 'expo-image';
 import { date, Goal, GoalDay, GoalDayStatus } from 'goals-tracker/logic';
+import { Button } from 'goals-tracker/native';
 import { colors } from 'goals-tracker/tokens';
 import React, { useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
 import { Text, View } from 'react-native';
 import Markdown from 'react-native-markdown-display';
+import * as v from 'valibot';
 
+import { FormInput } from '~/app/components/form/form-input';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
+import { error } from '~/app/utils/error';
 
 const markdownTheme = {
   primaryHeading: colors['pink-500'],
@@ -37,7 +43,10 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 
 export function ViewDay() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const { isViewDayOpen, selectedGoal, viewDayGoalDay, onViewDayClose } = useAppState();
+  const isViewDayOpen = useAppState(state => state.isViewDayOpen);
+  const selectedGoal = useAppState(state => state.selectedGoal);
+  const viewGoalDay = useAppState(state => state.viewGoalDay);
+  const onViewDayClose = useAppState(state => state.onViewDayClose);
 
   useEffect(() => {
     if (bottomSheetRef.current) {
@@ -61,13 +70,71 @@ export function ViewDay() {
       onClose={onViewDayClose}
     >
       <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
-        {selectedGoal && viewDayGoalDay && <ViewDayModal selectedGoal={selectedGoal} viewDayGoalDay={viewDayGoalDay} />}
+        {selectedGoal && viewGoalDay && <ViewDayModal selectedGoal={selectedGoal} viewGoalDay={viewGoalDay} />}
       </BottomSheetView>
     </BottomSheet>
   );
 }
 
-function ViewDayModal({ selectedGoal, viewDayGoalDay }: { selectedGoal: Goal; viewDayGoalDay: GoalDay }) {
+const AddNoteFormSchema = v.object({
+  note: v.pipe(
+    v.string(),
+    v.minLength(1, 'Please enter a note'),
+    v.maxLength(500, 'Note is too long (maximum 500 characters)'),
+  ),
+});
+
+type AddNoteForm = v.InferOutput<typeof AddNoteFormSchema>;
+
+function AddNoteFormUI({ goalDay }: { goalDay: GoalDay }) {
+  const updateGoalDayNote = useAppState(state => state.updateGoalDayNote);
+  const onAddNoteClose = useAppState(state => state.onAddNoteClose);
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = useForm<AddNoteForm>({
+    resolver: valibotResolver(AddNoteFormSchema),
+    defaultValues: {
+      note: '',
+    },
+  });
+
+  async function onSubmit(data: AddNoteForm) {
+    await updateGoalDayNote(goalDay, data.note);
+  }
+
+  return (
+    <View className="flex-1">
+      <FormInput
+        control={control}
+        label="Add a note for this day"
+        name="note"
+        placeholder="Enter your note message"
+        style={{ height: 150 }}
+        multiline
+      />
+      <View className="pt-5" />
+      <View style={{ flexDirection: 'row', gap: 12 }}>
+        <Button
+          enabled={!isSubmitting}
+          style={{ flex: 1, backgroundColor: colors['gray-700'] }}
+          onPress={onAddNoteClose}
+        >
+          Cancel
+        </Button>
+        <Button enabled={!isSubmitting} style={{ flex: 1 }} onPress={() => error.listen(handleSubmit(onSubmit))()}>
+          Save Note
+        </Button>
+      </View>
+    </View>
+  );
+}
+
+function ViewDayModal({ selectedGoal, viewGoalDay }: { selectedGoal: Goal; viewGoalDay: GoalDay }) {
+  const isAddNoteOpen = useAppState(state => state.isAddNoteOpen);
+  const onAddNoteOpen = useAppState(state => state.onAddNoteOpen);
+
   return (
     <>
       <Text className="text-2xl text-black">View Day</Text>
@@ -83,17 +150,23 @@ function ViewDayModal({ selectedGoal, viewDayGoalDay }: { selectedGoal: Goal; vi
             </Text>
           </View>
         </View>
-        <ViewDayUI goalDay={viewDayGoalDay} />
+        <ViewDayUI goalDay={viewGoalDay} />
       </View>
       <Divider />
-      {viewDayGoalDay.note ? (
+      {viewGoalDay.note ? (
         <View className="rounded-lg bg-gray-100 p-3">
-          <Markdown style={styles}>{viewDayGoalDay.note}</Markdown>
+          <Markdown style={styles}>{viewGoalDay.note}</Markdown>
         </View>
+      ) : isAddNoteOpen ? (
+        <AddNoteFormUI goalDay={viewGoalDay} />
       ) : (
         <View className="flex-1 items-center justify-start">
           <Image source={require('~/assets/not-found.svg')} style={{ marginTop: 30, width: 280, height: 280 }} />
           <Text className="text-md w-[300] text-center font-normal text-blue-700">No notes for this day</Text>
+          <View className="pt-5" />
+          <Button style={{ backgroundColor: colors['pink-500'], width: 200 }} onPress={onAddNoteOpen}>
+            Add Note
+          </Button>
         </View>
       )}
     </>
@@ -111,7 +184,7 @@ function goalDayStatusToColor(status: GoalDayStatus) {
     case GoalDayStatus.PendingToday:
       return colors['blue-500'];
     default:
-      return colors['gray-500']; // Fallback to a safe default color
+      return colors['gray-500'];
   }
 }
 
