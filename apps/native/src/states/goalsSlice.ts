@@ -27,6 +27,7 @@ export type GoalsSlice = {
   completeGoalDay(goalDay: GoalDay): Promise<void>;
   createGoal(params: CreateGoalDTO): Promise<void>;
   changeGoal(id: string): Promise<void>;
+  removeGoal(id: string): Promise<void>;
   coins: number;
   canUseCoins: boolean;
   isCreateGoalOpen: boolean;
@@ -98,13 +99,27 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     await persist();
   },
   async changeGoal(id) {
-    const { goals, selectedGoalId, persist } = get();
+    const { goals, selectedGoalId, persist, onChangeGoalClose } = get();
     if (selectedGoalId === id) throw new error.UserError('Goal already selected');
     if (!goals.some(goal => goal.id === id)) throw new error.DeveloperError('Goal not found');
-    set({ selectedGoalId: id, isChangeGoalOpen: false });
+    set({ selectedGoalId: id });
+    onChangeGoalClose();
     await persist();
   },
+  async removeGoal(id) {
+    const { goals, selectedGoalId, persist, fireAlert, onChangeGoalClose } = get();
+    const confirmed = await fireAlert({
+      title: 'Delete Goal',
+      message: 'Are you sure you want to delete this goal? This action cannot be undone.',
+    });
+    if (!confirmed) return;
 
+    const newGoals = goals.filter(goal => goal.id !== id);
+    const newSelectedGoalId = selectedGoalId === id ? undefined : selectedGoalId;
+    set({ goals: newGoals, selectedGoalId: newSelectedGoalId });
+    onChangeGoalClose();
+    await persist();
+  },
   async completeGoalDay(goalDay: GoalDay) {
     const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay, onViewDayOpen } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
