@@ -6,14 +6,15 @@ import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 export type GoalCardProps = RectButtonProps & {
   goal: Goal;
   selected?: boolean;
+  accessibilityHint?: string | undefined;
   onLongPress?: () => void;
 };
 
 export function GoalCard(props: GoalCardProps) {
-  const { goal, selected, onLongPress, ...rest } = props;
+  const { goal, selected, accessibilityHint, onLongPress, ...rest } = props;
   return (
     <RectButton {...rest} style={[styles.card, props.style]} onLongPress={onLongPress}>
-      <View accessibilityRole="button" style={styles.card_view} accessible>
+      <View accessibilityHint={accessibilityHint} accessibilityRole="button" style={styles.card_view} accessible>
         <View style={[styles.title_container, selected && styles.title_container_selected]}>
           <Text style={[styles.title_text, selected && styles.title_text_selected]}>{goal.description}</Text>
         </View>

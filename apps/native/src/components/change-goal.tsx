@@ -77,6 +77,7 @@ export function ChangeGoal() {
             return (
               <View className={index === 0 ? undefined : 'pt-3'} key={item.id}>
                 <GoalCard
+                  accessibilityHint="Long press to delete this goal"
                   goal={item}
                   selected={extraData === item.id}
                   onLongPress={() => error.listenAsync(onGoalDelete)(item.id)}
