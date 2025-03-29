@@ -61,7 +61,6 @@ export const error = {
           color: colors['black'],
         },
       });
-      console.log('error', error);
     } else if (error instanceof DeveloperError) {
       Toast.show({
         position: 'bottom',

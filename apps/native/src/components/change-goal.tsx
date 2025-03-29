@@ -24,8 +24,10 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 export function ChangeGoal() {
   const goals = useAppState(state => state.goals);
   const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
+  const selectedGoalId = useAppState(state => state.selectedGoalId);
   const onChangeGoalClose = useAppState(state => state.onChangeGoalClose);
   const changeGoal = useAppState(state => state.changeGoal);
+  const removeGoal = useAppState(state => state.removeGoal);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const rawListSize = textAndHandleSize + (GoalCard.height + dividerSize) * goals.length;
   const snapSize = Math.min(700, Math.max(400, 40 + rawListSize));
@@ -33,6 +35,10 @@ export function ChangeGoal() {
 
   async function onGoalChange(id: string) {
     await changeGoal(id);
+  }
+
+  async function onGoalDelete(id: string) {
+    await removeGoal(id);
   }
 
   useEffect(() => {
@@ -66,10 +72,17 @@ export function ChangeGoal() {
           contentContainerStyle={{ paddingHorizontal: config.screenPadding }}
           data={goals}
           estimatedItemSize={80}
-          renderItem={({ item, index }) => {
+          extraData={selectedGoalId}
+          renderItem={({ item, extraData, index }) => {
             return (
               <View className={index === 0 ? undefined : 'pt-3'} key={item.id}>
-                <GoalCard goal={item} onPress={() => error.listenAsync(onGoalChange)(item.id)} />
+                <GoalCard
+                  accessibilityHint="Long press to delete this goal"
+                  goal={item}
+                  selected={extraData === item.id}
+                  onLongPress={() => error.listenAsync(onGoalDelete)(item.id)}
+                  onPress={() => error.listenAsync(onGoalChange)(item.id)}
+                />
               </View>
             );
           }}
