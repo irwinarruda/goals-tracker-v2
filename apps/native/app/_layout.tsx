@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
 import { ChangeGoal } from '~/app/components/change-goal';
+import { Confetti } from '~/app/components/confetti';
 import { ConfirmComplete } from '~/app/components/confirm-complete';
 import { ConfirmDay } from '~/app/components/confirm-day';
 import { CreateGoal } from '~/app/components/create-goal';
@@ -40,6 +41,7 @@ function AppLayout() {
       <ConfirmDay />
       <ConfirmComplete />
       <ViewDay />
+      <Confetti />
       <Toast />
       <StatusBar style="light" />
     </GestureHandlerRootView>

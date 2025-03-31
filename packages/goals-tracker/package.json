@@ -62,7 +62,7 @@
     "typescript-config": "*"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^8.3.0",
+    "@react-native-community/datetimepicker": "^7.2.0",
     "date-fns": "^4.1.0",
     "expo-checkbox": "^4.0.1",
     "expo-image": "^2.0.6",

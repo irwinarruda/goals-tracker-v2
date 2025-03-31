@@ -121,7 +121,7 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     await persist();
   },
   async completeGoalDay(goalDay: GoalDay) {
-    const { selectedGoal, goals, coins, persist, fireAlert, openConfirmDay, onViewDayOpen } = get();
+    const { selectedGoal, goals, coins, persist, fireAlert, fireConfetti, openConfirmDay, onViewDayOpen } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
     const selectedDay = selectedGoal.days.find(day => day.date === goalDay.date);
     if (!selectedDay) throw new error.UserError('The day was not found');
@@ -140,8 +140,10 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
       const confirmDay = await openConfirmDay({ goalDay: selectedDay, isBought: false });
       note = confirmDay.note;
       if (!confirmDay.confirmed) return;
-    }
-    if (selectedDay.status === GoalDayStatus.PendingToday) {
+    } else if (selectedDay.status === GoalDayStatus.Error) {
+      onViewDayOpen(goalDay);
+      return;
+    } else if (selectedDay.status === GoalDayStatus.PendingToday) {
       const confirmDay = await openConfirmDay({ goalDay: selectedDay, isBought: false });
       note = confirmDay.note;
       if (!confirmDay.confirmed) return;
@@ -150,11 +152,12 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
     completeGoalDay(newGoals[goalIndex], selectedDay.date, false, note);
+    fireConfetti();
     set({ goals: newGoals, coins: coins + 1 });
     await persist();
   },
   async completeTodayGoalWithCoins() {
-    const { selectedGoal, canUseCoins, coins, goals, persist, fireAlert, openConfirmDay } = get();
+    const { selectedGoal, canUseCoins, coins, goals, persist, fireAlert, fireConfetti, openConfirmDay } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
     const today = date.formatISO(date.startOfDay(new Date()));
     const todayDay = selectedGoal.days.find(day => day.date === today);
@@ -174,6 +177,7 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     const newGoals = clone(goals);
     const goalIndex = newGoals.findIndex(goal => goal.id === selectedGoal.id);
     completeGoalDay(newGoals[goalIndex], today, true, note);
+    fireConfetti();
     set({ goals: newGoals, coins: coinsAfter });
     await persist();
   },
