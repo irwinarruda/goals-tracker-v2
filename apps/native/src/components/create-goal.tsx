@@ -1,13 +1,14 @@
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Button } from 'goals-tracker/native';
-import { colors } from 'goals-tracker/tokens';
+import { colors, roundeds } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { Text, View } from 'react-native';
 import * as v from 'valibot';
 
 import { useFormTrigger } from '~/app/providers/form-trigger';
+import { useTheme } from '~/app/providers/theme';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 import { error } from '~/app/utils/error';
@@ -55,6 +56,7 @@ export function CreateGoal() {
       coins: '',
     },
   });
+  const { backgroundColor } = useTheme();
   const useCoins = useWatch({ control, name: 'useCoins' });
   const isCreateGoalOpen = useAppState(state => state.isCreateGoalOpen);
   const onCreateGoalClose = useAppState(state => state.onCreateGoalClose);
@@ -93,13 +95,21 @@ export function CreateGoal() {
         backgroundColor: colors['pink-500'],
         width: 50,
       }}
+      handleStyle={{
+        backgroundColor: backgroundColor,
+        borderTopLeftRadius: roundeds['2xl'],
+        borderTopRightRadius: roundeds['2xl'],
+      }}
       index={-1}
       ref={bottomSheetRef}
       snapPoints={[400]}
       enablePanDownToClose
       onClose={onCreateGoalClose}
     >
-      <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
+      <BottomSheetView
+        className="flex-1 items-stretch py-4 dark:bg-black"
+        style={{ paddingHorizontal: config.screenPadding }}
+      >
         <Text className="text-2xl text-black">Create Goal</Text>
         <View className="pt-5" />
         <FormInput control={control} label="Description" name="description" placeholder="Enter a goal description" />
@@ -140,7 +150,7 @@ export function CreateGoal() {
           />
         </View>
         <View className="pt-5" />
-        <Button enabled={!isSubmitting} onPress={() => error.listen(handleSubmit(onSubmit))()}>
+        <Button enabled={!isSubmitting} onPress={() => error.listenAsync(handleSubmit(onSubmit))()}>
           Create
         </Button>
       </BottomSheetView>

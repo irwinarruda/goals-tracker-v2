@@ -5,27 +5,27 @@
     "version": "1.0.0",
     "scheme": "myapp",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "enableADSExtension": true,
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.xnative"
+      "bundleIdentifier": "com.anonymous.xnative",
+      "icon": {
+        "dark": "./assets/logo-ios.png",
+        "light": "./assets/logo-ios.png",
+        "tinted": "./assets/logo-ios.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/logo-android.png",
+        "monochromeImage": "./assets/logo-android.png",
+        "backgroundColor": "#3F51B5"
       },
       "package": "com.anonymous.xnative"
     },
@@ -51,6 +51,15 @@
             "node_modules/@expo-google-fonts/roboto/Roboto_900Black_Italic.ttf",
             "node_modules/@expo-google-fonts/roboto/Roboto_900Black.ttf"
           ]
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#3F51B5",
+          "imageWidth": 150
         }
       ]
     ],

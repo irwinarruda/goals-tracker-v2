@@ -2,12 +2,13 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheet
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { date } from 'goals-tracker/logic';
 import { Button } from 'goals-tracker/native';
-import { colors } from 'goals-tracker/tokens';
+import { colors, roundeds } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
 import * as v from 'valibot';
 
+import { useTheme } from '~/app/providers/theme';
 import { AppSlices, useAppState } from '~/app/states';
 import { cn } from '~/app/utils/cn';
 import { config } from '~/app/utils/config';
@@ -38,6 +39,7 @@ export function ConfirmDay() {
     },
   });
 
+  const { backgroundColor } = useTheme();
   const isConfirmDayOpen = useAppState(state => state.isConfirmDayOpen);
   const confirmDayData = useAppState(state => state.confirmDayData);
   const onConfirmDayConfirm = useAppState(state => state.onConfirmDayConfirm);
@@ -68,13 +70,21 @@ export function ConfirmDay() {
         backgroundColor: colors['pink-500'],
         width: 50,
       }}
+      handleStyle={{
+        backgroundColor: backgroundColor,
+        borderTopLeftRadius: roundeds['2xl'],
+        borderTopRightRadius: roundeds['2xl'],
+      }}
       index={-1}
       ref={bottomSheetRef}
       snapPoints={[400]}
       enablePanDownToClose
       onClose={error.listen(onClose)}
     >
-      <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
+      <BottomSheetView
+        className="flex-1 items-stretch py-4 dark:bg-black"
+        style={{ paddingHorizontal: config.screenPadding }}
+      >
         <View className="flex-row items-center justify-between">
           <Text className="text-2xl text-black">Confirm Day</Text>
           <ConfirmData confirmDayData={confirmDayData} />
@@ -100,7 +110,11 @@ export function ConfirmDay() {
           >
             Cancel
           </Button>
-          <Button enabled={!isSubmitting} style={{ flex: 1 }} onPress={() => error.listen(handleSubmit(onSubmit))()}>
+          <Button
+            enabled={!isSubmitting}
+            style={{ flex: 1 }}
+            onPress={() => error.listenAsync(handleSubmit(onSubmit))()}
+          >
             Confirm
           </Button>
         </View>

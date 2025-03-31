@@ -4,10 +4,11 @@ import BottomSheet, {
   BottomSheetFlashList,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { colors } from 'goals-tracker/tokens';
+import { colors, roundeds } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
 
+import { useTheme } from '~/app/providers/theme';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 import { error } from '~/app/utils/error';
@@ -22,6 +23,7 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 }
 
 export function ChangeGoal() {
+  const { backgroundColor } = useTheme();
   const goals = useAppState(state => state.goals);
   const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
   const selectedGoalId = useAppState(state => state.selectedGoalId);
@@ -56,6 +58,11 @@ export function ChangeGoal() {
         backgroundColor: colors['pink-500'],
         width: 50,
       }}
+      handleStyle={{
+        backgroundColor: backgroundColor,
+        borderTopLeftRadius: roundeds['2xl'],
+        borderTopRightRadius: roundeds['2xl'],
+      }}
       index={-1}
       ref={bottomSheetRef}
       snapPoints={[snapSize]}
@@ -63,12 +70,16 @@ export function ChangeGoal() {
       enablePanDownToClose
       onClose={onChangeGoalClose}
     >
-      <BottomSheetView className="w-full items-stretch px-4" style={{ paddingHorizontal: config.screenPadding }}>
+      <BottomSheetView
+        className="w-full items-stretch px-4 dark:bg-black"
+        style={{ paddingHorizontal: config.screenPadding }}
+      >
         <Text className="text-2xl text-black">Change Goal</Text>
         <View className="pt-3" />
       </BottomSheetView>
       <View style={{ height: listSize }}>
         <BottomSheetFlashList
+          className="dark:bg-black"
           contentContainerStyle={{ paddingHorizontal: config.screenPadding }}
           data={goals}
           estimatedItemSize={80}

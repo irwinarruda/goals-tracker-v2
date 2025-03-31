@@ -189,7 +189,7 @@ export function syncDays(goal: Goal): void {
 export function updateGoalDayNote(goal: Goal, goalDate: string, note: string): void {
   const day = goal.days.find(day => day.date === goalDate);
   if (!day) throw new error.BusinessError('Day is not found');
-  if (day.status !== GoalDayStatus.Success) {
+  if (day.status !== GoalDayStatus.Success && day.status !== GoalDayStatus.Error) {
     throw new error.BusinessError('Cannot add note to incomplete day');
   }
   if (note === day.note) {

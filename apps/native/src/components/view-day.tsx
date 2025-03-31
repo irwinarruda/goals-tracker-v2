@@ -8,7 +8,7 @@ import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Image } from 'expo-image';
 import { date, Goal, GoalDay, GoalDayStatus } from 'goals-tracker/logic';
 import { Button } from 'goals-tracker/native';
-import { colors } from 'goals-tracker/tokens';
+import { colors, roundeds } from 'goals-tracker/tokens';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
@@ -17,6 +17,7 @@ import Markdown from 'react-native-markdown-display';
 import * as v from 'valibot';
 
 import { FormInput } from '~/app/components/form/form-input';
+import { useTheme } from '~/app/providers/theme';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 import { error } from '~/app/utils/error';
@@ -42,6 +43,7 @@ function renderBackdrop(props: BottomSheetBackdropProps) {
 }
 
 export function ViewDay() {
+  const { backgroundColor } = useTheme();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const isViewDayOpen = useAppState(state => state.isViewDayOpen);
   const selectedGoal = useAppState(state => state.selectedGoal);
@@ -63,13 +65,21 @@ export function ViewDay() {
         backgroundColor: colors['pink-500'],
         width: 50,
       }}
+      handleStyle={{
+        backgroundColor: backgroundColor,
+        borderTopLeftRadius: roundeds['2xl'],
+        borderTopRightRadius: roundeds['2xl'],
+      }}
       index={-1}
       ref={bottomSheetRef}
       snapPoints={['75%']}
       enablePanDownToClose
       onClose={onViewDayClose}
     >
-      <BottomSheetView className="flex-1 items-stretch py-4" style={{ paddingHorizontal: config.screenPadding }}>
+      <BottomSheetView
+        className="flex-1 items-stretch py-4 dark:bg-black"
+        style={{ paddingHorizontal: config.screenPadding }}
+      >
         {selectedGoal && viewGoalDay && <ViewDayModal selectedGoal={selectedGoal} viewGoalDay={viewGoalDay} />}
       </BottomSheetView>
     </BottomSheet>
@@ -123,7 +133,7 @@ function AddNoteFormUI({ goalDay }: { goalDay: GoalDay }) {
         >
           Cancel
         </Button>
-        <Button enabled={!isSubmitting} style={{ flex: 1 }} onPress={() => error.listen(handleSubmit(onSubmit))()}>
+        <Button enabled={!isSubmitting} style={{ flex: 1 }} onPress={() => error.listenAsync(handleSubmit(onSubmit))()}>
           Save Note
         </Button>
       </View>
@@ -178,7 +188,7 @@ function goalDayStatusToColor(status: GoalDayStatus) {
     case GoalDayStatus.Success:
       return colors['green-500'];
     case GoalDayStatus.Error:
-      return colors['pink-500'];
+      return colors['pink-700'];
     case GoalDayStatus.Pending:
       return colors['gray-500'];
     case GoalDayStatus.PendingToday:
