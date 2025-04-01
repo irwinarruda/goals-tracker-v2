@@ -8,10 +8,10 @@ export type ConfettiSlice = {
 
 export const confettiSlice: AppState<ConfettiSlice> = set => ({
   isConfettiVisible: false,
-  fireConfetti: () => {
+  fireConfetti() {
     set({ isConfettiVisible: true });
   },
-  hideConfetti: () => {
+  hideConfetti() {
     set({ isConfettiVisible: false });
   },
 });

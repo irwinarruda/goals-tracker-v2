@@ -3,7 +3,6 @@ import 'react-native-get-random-values';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { colors } from 'goals-tracker/tokens';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
@@ -28,9 +27,6 @@ function AppLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
         screenOptions={{
-          contentStyle: {
-            backgroundColor: colors['white'],
-          },
           headerTitle: '',
           fullScreenGestureEnabled: true,
           header: args => <Header {...args} />,
@@ -41,8 +37,8 @@ function AppLayout() {
       <ConfirmDay />
       <ConfirmComplete />
       <ViewDay />
-      <Confetti />
       <Toast />
+      <Confetti />
       <StatusBar style="light" />
     </GestureHandlerRootView>
   );

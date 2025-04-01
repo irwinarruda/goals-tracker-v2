@@ -7,8 +7,8 @@ import BottomSheet, {
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Image } from 'expo-image';
 import { date, Goal, GoalDay, GoalDayStatus } from 'goals-tracker/logic';
-import { Button } from 'goals-tracker/native';
-import { colors, roundeds } from 'goals-tracker/tokens';
+import { Button, useTheme } from 'goals-tracker/native';
+import { colors } from 'goals-tracker/tokens';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
@@ -17,7 +17,6 @@ import Markdown from 'react-native-markdown-display';
 import * as v from 'valibot';
 
 import { FormInput } from '~/app/components/form/form-input';
-import { useTheme } from '~/app/providers/theme';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 import { error } from '~/app/utils/error';
@@ -39,11 +38,11 @@ const styles = StyleSheet.create({
 });
 
 function renderBackdrop(props: BottomSheetBackdropProps) {
-  return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
+  return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} opacity={1.5} />;
 }
 
 export function ViewDay() {
-  const { backgroundColor } = useTheme();
+  const theme = useTheme();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const isViewDayOpen = useAppState(state => state.isViewDayOpen);
   const selectedGoal = useAppState(state => state.selectedGoal);
@@ -60,15 +59,11 @@ export function ViewDay() {
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
+      backgroundStyle={{ backgroundColor: theme.backgroundColor }}
       enableDynamicSizing={false}
       handleIndicatorStyle={{
         backgroundColor: colors['pink-500'],
         width: 50,
-      }}
-      handleStyle={{
-        backgroundColor: backgroundColor,
-        borderTopLeftRadius: roundeds['2xl'],
-        borderTopRightRadius: roundeds['2xl'],
       }}
       index={-1}
       ref={bottomSheetRef}
@@ -77,7 +72,7 @@ export function ViewDay() {
       onClose={onViewDayClose}
     >
       <BottomSheetView
-        className="flex-1 items-stretch py-4 dark:bg-black"
+        className="flex-1 items-stretch py-4 dark:bg-blue-900"
         style={{ paddingHorizontal: config.screenPadding }}
       >
         {selectedGoal && viewGoalDay && <ViewDayModal selectedGoal={selectedGoal} viewGoalDay={viewGoalDay} />}
@@ -147,11 +142,11 @@ function ViewDayModal({ selectedGoal, viewGoalDay }: { selectedGoal: Goal; viewG
 
   return (
     <>
-      <Text className="text-2xl text-black">View Day</Text>
+      <Text className="text-2xl text-black dark:text-white">View Day</Text>
       <Divider />
       <View className="flex-row">
         <View className="flex-1 pr-3">
-          <View className="flex-1 justify-center rounded-lg bg-blue-300 px-2 py-0">
+          <View className="flex-1 justify-center rounded-lg bg-blue-500 px-2 py-0">
             <Text className="text-md font-bold text-white" ellipsizeMode="tail" numberOfLines={1}>
               {selectedGoal.description}
             </Text>
@@ -172,7 +167,9 @@ function ViewDayModal({ selectedGoal, viewGoalDay }: { selectedGoal: Goal; viewG
       ) : (
         <View className="flex-1 items-center justify-start">
           <Image source={require('~/assets/not-found.svg')} style={{ marginTop: 30, width: 280, height: 280 }} />
-          <Text className="text-md w-[300] text-center font-normal text-blue-700">No notes for this day</Text>
+          <Text className="text-md w-[300] text-center font-normal text-black dark:text-white">
+            No notes for this day
+          </Text>
           <View className="pt-5" />
           <Button style={{ backgroundColor: colors['pink-500'], width: 200 }} onPress={onAddNoteOpen}>
             Add Note
