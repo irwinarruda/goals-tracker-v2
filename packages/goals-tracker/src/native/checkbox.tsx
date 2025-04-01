@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { colors, fontSizes, roundeds } from '../tokens';
+import { Theme, useTheme } from './theme';
 
 export interface CheckboxProps extends RNCheckboxProps {
   label?: string;
@@ -19,6 +20,8 @@ export interface CheckboxProps extends RNCheckboxProps {
 }
 
 export function Checkbox({ label, containerStyle, labelStyle, value = false, ...props }: CheckboxProps) {
+  const styles = createStyles(useTheme());
+
   function onPress(e: GestureResponderEvent) {
     e.preventDefault();
     if (props.disabled) return;
@@ -53,22 +56,24 @@ export function Checkbox({ label, containerStyle, labelStyle, value = false, ...
   );
 }
 
-const styles = StyleSheet.create({
-  checkbox: {
-    borderRadius: roundeds['sm'],
-  },
-  container: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingVertical: 9,
-  },
-  disabledLabel: {
-    color: colors['gray-500'],
-  },
-  label: {
-    color: colors['gray-700'],
-    flex: 1,
-    fontSize: fontSizes['sm'],
-    marginLeft: 8,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    checkbox: {
+      borderRadius: roundeds['sm'],
+    },
+    container: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      paddingVertical: 9,
+    },
+    disabledLabel: {
+      color: colors['gray-500'],
+    },
+    label: {
+      color: theme.textColor,
+      flex: 1,
+      fontSize: fontSizes['sm'],
+      marginLeft: 8,
+    },
+  });
+}

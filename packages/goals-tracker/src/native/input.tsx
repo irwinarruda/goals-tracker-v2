@@ -13,6 +13,7 @@ import {
 import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { colors, fontSizes, roundeds } from '../tokens';
+import { Theme, useTheme } from './theme';
 
 function maskValue(value: string, mask: string): string {
   let result = '';
@@ -54,6 +55,9 @@ export interface InputProps extends TextInputProps {
 
 export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
   ({ containerStyle, style, maskNumber, allowOnlyNumbers, rightIcon, error, ...props }, ref) => {
+    const theme = useTheme();
+    const styles = createStyles(theme);
+
     const [focus, setFocus] = useState(false);
     const top = useSharedValue(labelTop);
     const left = useSharedValue(labelLeft);
@@ -131,66 +135,68 @@ Input.displayName = 'Input';
 Input.paddingHorizontal = paddingHorizontal;
 Input.paddingVertical = paddingVertical;
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  container_disabled: {
-    opacity: 0.6,
-  },
-  error_text: {
-    backgroundColor: colors.white,
-    bottom: errorBottom,
-    color: colors['pink-500'],
-    fontSize: fontSizes['2xs'],
-    left: errorLeft,
-    paddingHorizontal: errorPaddingHorizontal,
-    position: 'absolute',
-    zIndex: 1,
-  },
-  input: {
-    backgroundColor: colors.white,
-    borderColor: colors['gray-500'],
-    borderRadius: roundeds['md'],
-    borderWidth: 1,
-    color: colors['gray-700'],
-    fontSize: fontSize,
-    paddingHorizontal: paddingHorizontal,
-    paddingVertical: paddingVertical,
-  },
-  input_error: {
-    borderColor: colors['pink-500'],
-    shadowColor: colors['pink-500'],
-  },
-  input_focus: {
-    borderColor: colors['blue-500'],
-    borderWidth: 2,
-    elevation: 2,
-    margin: -1,
-    shadowColor: colors['blue-500'],
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  input_right_icon: {
-    paddingRight: 48,
-  },
-  label_text: {
-    backgroundColor: colors.white,
-    color: colors['gray-500'],
-    fontSize: fontSize,
-    left: labelLeft,
-    paddingHorizontal: labelPaddingHorizontal,
-    pointerEvents: 'none',
-    position: 'absolute',
-    top: labelTop,
-    zIndex: 1,
-  },
-  right_icon: {
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    right: rightIconRight,
-    top: 0,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      position: 'relative',
+    },
+    container_disabled: {
+      opacity: 0.6,
+    },
+    error_text: {
+      backgroundColor: theme.backgroundColor,
+      bottom: errorBottom,
+      color: colors['pink-500'],
+      fontSize: fontSizes['2xs'],
+      left: errorLeft,
+      paddingHorizontal: errorPaddingHorizontal,
+      position: 'absolute',
+      zIndex: 1,
+    },
+    input: {
+      backgroundColor: theme.backgroundColor,
+      borderColor: theme.borderColor,
+      borderRadius: roundeds['md'],
+      borderWidth: 1,
+      color: theme.textColor,
+      fontSize: fontSize,
+      paddingHorizontal: paddingHorizontal,
+      paddingVertical: paddingVertical,
+    },
+    input_error: {
+      borderColor: colors['pink-500'],
+      shadowColor: colors['pink-500'],
+    },
+    input_focus: {
+      borderColor: colors['blue-500'],
+      borderWidth: 2,
+      elevation: 2,
+      margin: -1,
+      shadowColor: colors['blue-500'],
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+    },
+    input_right_icon: {
+      paddingRight: 48,
+    },
+    label_text: {
+      backgroundColor: theme.backgroundColor,
+      color: theme.subTextColor,
+      fontSize: fontSize,
+      left: labelLeft,
+      paddingHorizontal: labelPaddingHorizontal,
+      pointerEvents: 'none',
+      position: 'absolute',
+      top: labelTop,
+      zIndex: 1,
+    },
+    right_icon: {
+      bottom: 0,
+      justifyContent: 'center',
+      position: 'absolute',
+      right: rightIconRight,
+      top: 0,
+    },
+  });
+}

@@ -11,7 +11,7 @@ A native mobile app that helps users track their daily goals, routines, tasks, n
 - [x] Notes for errors
 - [x] Better success UI for motivating users
 - [x] Logos and Assets
-- [ ] Dark theme
+- [x] Dark theme
 - [ ] IOS Test App for my usage
 
 ### Second Release

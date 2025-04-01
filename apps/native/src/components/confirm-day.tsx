@@ -1,14 +1,13 @@
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { date } from 'goals-tracker/logic';
-import { Button } from 'goals-tracker/native';
-import { colors, roundeds } from 'goals-tracker/tokens';
+import { Button, useTheme } from 'goals-tracker/native';
+import { colors } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
 import * as v from 'valibot';
 
-import { useTheme } from '~/app/providers/theme';
 import { AppSlices, useAppState } from '~/app/states';
 import { cn } from '~/app/utils/cn';
 import { config } from '~/app/utils/config';
@@ -23,7 +22,7 @@ const ConfirmDayFormSchema = v.object({
 type ConfirmDayForm = v.InferOutput<typeof ConfirmDayFormSchema>;
 
 function renderBackdrop(props: BottomSheetBackdropProps) {
-  return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
+  return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} opacity={1.5} />;
 }
 
 export function ConfirmDay() {
@@ -39,7 +38,7 @@ export function ConfirmDay() {
     },
   });
 
-  const { backgroundColor } = useTheme();
+  const theme = useTheme();
   const isConfirmDayOpen = useAppState(state => state.isConfirmDayOpen);
   const confirmDayData = useAppState(state => state.confirmDayData);
   const onConfirmDayConfirm = useAppState(state => state.onConfirmDayConfirm);
@@ -65,15 +64,11 @@ export function ConfirmDay() {
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
+      backgroundStyle={{ backgroundColor: theme.backgroundColor }}
       enableDynamicSizing={false}
       handleIndicatorStyle={{
         backgroundColor: colors['pink-500'],
         width: 50,
-      }}
-      handleStyle={{
-        backgroundColor: backgroundColor,
-        borderTopLeftRadius: roundeds['2xl'],
-        borderTopRightRadius: roundeds['2xl'],
       }}
       index={-1}
       ref={bottomSheetRef}
@@ -82,11 +77,11 @@ export function ConfirmDay() {
       onClose={error.listen(onClose)}
     >
       <BottomSheetView
-        className="flex-1 items-stretch py-4 dark:bg-black"
+        className="flex-1 items-stretch py-4 dark:bg-blue-900"
         style={{ paddingHorizontal: config.screenPadding }}
       >
         <View className="flex-row items-center justify-between">
-          <Text className="text-2xl text-black">Confirm Day</Text>
+          <Text className="text-2xl text-black dark:text-white">Confirm Day</Text>
           <ConfirmData confirmDayData={confirmDayData} />
         </View>
         <View className="pt-5" />
@@ -113,7 +108,7 @@ export function ConfirmDay() {
           <Button
             enabled={!isSubmitting}
             style={{ flex: 1 }}
-            onPress={() => error.listenAsync(handleSubmit(onSubmit))()}
+            onPress={e => error.listenAsync(handleSubmit(onSubmit))()}
           >
             Confirm
           </Button>
