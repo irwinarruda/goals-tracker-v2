@@ -4,7 +4,6 @@ import 'react-native-get-random-values';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { Appearance } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
@@ -16,8 +15,6 @@ import { CreateGoal } from '~/app/components/create-goal';
 import { Header } from '~/app/components/header';
 import { ViewDay } from '~/app/components/view-day';
 import { useAppState } from '~/app/states';
-
-Appearance.setColorScheme('light');
 
 function AppLayout() {
   const sync = useAppState(state => state.sync);
