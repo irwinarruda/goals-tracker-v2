@@ -21,7 +21,7 @@ export default function Native() {
 
   if (!selectedGoal) {
     return (
-      <View className="flex-1 items-center justify-start p-4 dark:bg-black">
+      <View className="flex-1 items-center justify-start p-4 dark:bg-blue-900">
         <Image source={require('~/assets/not-found.svg')} style={{ marginTop: 30, width: 280, height: 280 }} />
         <Text className="text-md w-[300] text-center font-normal text-blue-700">
           Nenhuma meta não definida, clique no botão + para adicionar
@@ -32,7 +32,7 @@ export default function Native() {
   }
 
   return (
-    <View className="flex-1 items-stretch justify-center dark:bg-black">
+    <View className="flex-1 items-stretch justify-center dark:bg-blue-900">
       <View className="w-full flex-1 pt-2">
         <FlashList
           contentContainerStyle={{

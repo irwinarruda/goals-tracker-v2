@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 import { useAppState } from '~/app/states';
@@ -8,20 +8,8 @@ export function Confetti() {
   const isConfettiVisible = useAppState(state => state.isConfettiVisible);
   const hideConfetti = useAppState(state => state.hideConfetti);
 
-  useEffect(() => {
-    if (isConfettiVisible && confettiRef.current) {
-      confettiRef.current.start();
-    }
-  }, [isConfettiVisible]);
-
+  if (!isConfettiVisible) return null;
   return (
-    <ConfettiCannon
-      autoStart={false}
-      count={300}
-      origin={{ x: -10, y: 0 }}
-      ref={confettiRef}
-      fadeOut
-      onAnimationEnd={hideConfetti}
-    />
+    <ConfettiCannon count={300} origin={{ x: -10, y: 0 }} ref={confettiRef} fadeOut onAnimationEnd={hideConfetti} />
   );
 }

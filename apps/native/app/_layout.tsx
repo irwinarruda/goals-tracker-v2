@@ -3,7 +3,6 @@ import 'react-native-get-random-values';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { colors } from 'goals-tracker/tokens';
 import { useEffect } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -31,9 +30,6 @@ function AppLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <Stack
             screenOptions={{
-              contentStyle: {
-                backgroundColor: colors['white'],
-              },
               headerTitle: '',
               fullScreenGestureEnabled: true,
               header: args => <Header {...args} />,

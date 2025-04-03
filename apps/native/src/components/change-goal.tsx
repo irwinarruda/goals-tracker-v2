@@ -4,11 +4,11 @@ import BottomSheet, {
   BottomSheetFlashList,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { colors, roundeds } from 'goals-tracker/tokens';
+import { useTheme } from 'goals-tracker/native';
+import { colors } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '~/app/providers/theme';
 import { useAppState } from '~/app/states';
 import { config } from '~/app/utils/config';
 import { error } from '~/app/utils/error';
@@ -19,11 +19,11 @@ const textAndHandleSize = 63;
 const dividerSize = 12;
 
 function renderBackdrop(props: BottomSheetBackdropProps) {
-  return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />;
+  return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} opacity={1.5} />;
 }
 
 export function ChangeGoal() {
-  const { backgroundColor } = useTheme();
+  const theme = useTheme();
   const goals = useAppState(state => state.goals);
   const isChangeGoalOpen = useAppState(state => state.isChangeGoalOpen);
   const selectedGoalId = useAppState(state => state.selectedGoalId);
@@ -53,15 +53,11 @@ export function ChangeGoal() {
   return (
     <BottomSheet
       backdropComponent={renderBackdrop}
+      backgroundStyle={{ backgroundColor: theme.backgroundColor }}
       enableDynamicSizing={false}
       handleIndicatorStyle={{
         backgroundColor: colors['pink-500'],
         width: 50,
-      }}
-      handleStyle={{
-        backgroundColor: backgroundColor,
-        borderTopLeftRadius: roundeds['2xl'],
-        borderTopRightRadius: roundeds['2xl'],
       }}
       index={-1}
       ref={bottomSheetRef}
@@ -71,15 +67,14 @@ export function ChangeGoal() {
       onClose={onChangeGoalClose}
     >
       <BottomSheetView
-        className="w-full items-stretch px-4 dark:bg-black"
+        className="w-full items-stretch px-4 dark:bg-blue-900"
         style={{ paddingHorizontal: config.screenPadding }}
       >
-        <Text className="text-2xl text-black">Change Goal</Text>
+        <Text className="text-2xl text-black dark:text-white">Change Goal</Text>
         <View className="pt-3" />
       </BottomSheetView>
       <View style={{ height: listSize }}>
         <BottomSheetFlashList
-          className="dark:bg-black"
           contentContainerStyle={{ paddingHorizontal: config.screenPadding }}
           data={goals}
           estimatedItemSize={80}

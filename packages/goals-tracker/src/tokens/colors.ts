@@ -6,6 +6,7 @@ export const colors = {
   'blue-300': '#6573C3',
   'blue-500': '#3F51B5',
   'blue-700': '#2C387E',
+  'blue-900': '#060B2B',
   'pink-300': '#F73378',
   'pink-500': '#F50057',
   'pink-700': '#AB003C',
@@ -15,4 +16,5 @@ export const colors = {
   'gray-300': '#C2D7E1',
   'gray-500': '#90A4AE',
   'gray-700': '#57666E',
+  'gray-900': '#2D3B42',
 } as const;
