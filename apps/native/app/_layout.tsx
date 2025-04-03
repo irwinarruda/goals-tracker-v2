@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { colors } from 'goals-tracker/tokens';
 import { useEffect } from 'react';
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
@@ -25,26 +26,30 @@ function AppLayout() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack
-        screenOptions={{
-          contentStyle: {
-            backgroundColor: colors['white'],
-          },
-          headerTitle: '',
-          fullScreenGestureEnabled: true,
-          header: args => <Header {...args} />,
-        }}
-      />
-      <CreateGoal />
-      <ChangeGoal />
-      <ConfirmDay />
-      <ConfirmComplete />
-      <ViewDay />
-      <Confetti />
-      <Toast />
-      <StatusBar style="light" />
-    </GestureHandlerRootView>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Stack
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: colors['white'],
+              },
+              headerTitle: '',
+              fullScreenGestureEnabled: true,
+              header: args => <Header {...args} />,
+            }}
+          />
+          <CreateGoal />
+          <ChangeGoal />
+          <ConfirmDay />
+          <ConfirmComplete />
+          <ViewDay />
+          <Confetti />
+          <Toast />
+          <StatusBar style="light" />
+        </GestureHandlerRootView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

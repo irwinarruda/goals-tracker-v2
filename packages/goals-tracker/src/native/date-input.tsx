@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { TextInput } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Path, Svg } from 'react-native-svg';
@@ -79,6 +79,10 @@ export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, DateInpu
       if (props.onChangeText) props.onChangeText('');
     }
   }
+
+  useEffect(() => {
+    setDisplayValue(formatDateToDisplay(props.value));
+  }, [props.value]);
 
   return (
     <>

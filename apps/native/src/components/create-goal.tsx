@@ -44,6 +44,7 @@ export function CreateGoal() {
   const {
     handleSubmit,
     trigger,
+    reset,
     control,
     formState: { isSubmitting },
   } = useForm<CreateGoalForm>({
@@ -71,6 +72,11 @@ export function CreateGoal() {
       useCoins: data.useCoins,
       coins: Number(data.coins),
     });
+  }
+
+  function onClose() {
+    onCreateGoalClose();
+    reset();
   }
 
   useFormTrigger<CreateGoalForm>({
@@ -104,7 +110,7 @@ export function CreateGoal() {
       ref={bottomSheetRef}
       snapPoints={[400]}
       enablePanDownToClose
-      onClose={onCreateGoalClose}
+      onClose={onClose}
     >
       <BottomSheetView
         className="flex-1 items-stretch py-4 dark:bg-black"
