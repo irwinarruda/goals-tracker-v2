@@ -3,6 +3,7 @@ import 'react-native-get-random-values';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useTheme } from 'goals-tracker/native';
 import { useEffect } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -18,6 +19,7 @@ import { ViewDay } from '~/app/components/view-day';
 import { useAppState } from '~/app/states';
 
 function AppLayout() {
+  const theme = useTheme();
   const sync = useAppState(state => state.sync);
 
   useEffect(() => {
@@ -25,12 +27,13 @@ function AppLayout() {
   }, []);
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView className="flex-1">
           <Stack
             screenOptions={{
               headerTitle: '',
+              contentStyle: { backgroundColor: theme.backgroundColor },
               fullScreenGestureEnabled: true,
               header: args => <Header {...args} />,
             }}

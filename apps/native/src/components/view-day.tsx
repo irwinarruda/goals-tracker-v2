@@ -117,6 +117,7 @@ function AddNoteFormUI({ goalDay }: { goalDay: GoalDay }) {
         name="note"
         placeholder="Enter your note message"
         style={{ height: 150 }}
+        textAlignVertical="top"
         multiline
       />
       <View className="pt-5" />
