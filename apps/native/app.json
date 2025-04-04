@@ -1,20 +1,19 @@
 {
   "expo": {
-    "name": "native",
-    "slug": "native",
+    "name": "Goals Tracker",
+    "slug": "goals-tracker",
     "version": "1.0.0",
     "scheme": "myapp",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "enableADSExtension": true,
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.xnative",
+      "bundleIdentifier": "com.goals.tracker",
       "icon": {
         "dark": "./assets/logo-ios.png",
         "light": "./assets/logo-ios.png",
@@ -27,7 +26,7 @@
         "monochromeImage": "./assets/logo-android.png",
         "backgroundColor": "#3F51B5"
       },
-      "package": "com.anonymous.xnative"
+      "package": "com.goals.tracker"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -40,16 +39,16 @@
         "expo-font",
         {
           "fonts": [
-            "node_modules/@expo-google-fonts/roboto/Roboto_300Light_Italic.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_300Light.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_400Regular_Italic.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_500Medium_Italic.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_700Bold_Italic.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_700Bold.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_900Black_Italic.ttf",
-            "node_modules/@expo-google-fonts/roboto/Roboto_900Black.ttf"
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_300Light_Italic.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_300Light.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_400Regular_Italic.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_500Medium_Italic.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_700Bold_Italic.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_700Bold.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_900Black_Italic.ttf",
+            "../../node_modules/@expo-google-fonts/roboto/Roboto_900Black.ttf"
           ]
         }
       ],
