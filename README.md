@@ -12,12 +12,14 @@ A native mobile app that helps users track their daily goals, routines, tasks, n
 - [x] Better success UI for motivating users
 - [x] Logos and Assets
 - [x] Dark theme
-- [ ] IOS Test App for my usage
+- [x] IOS Test App for my usage
 
 ### Second Release
 
 - [ ] Push notifications
-- [ ] Login per user
+- [ ] Login per user (Google and Apple)
+- [ ] Better icons for dark theme
+- [ ] Edit goal name
 
 ### Third Release
 
