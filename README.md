@@ -16,10 +16,20 @@ A native mobile app that helps users track their daily goals, routines, tasks, n
 
 ### Second Release
 
+**Features**
+
 - [ ] Push notifications
 - [ ] Login per user (Google and Apple)
 - [ ] Better icons for dark theme
 - [ ] Edit goal name
+
+**Bugs**
+
+- [ ] Date input first date change is wrong
+- [ ] Reduce confetti speed
+- [ ] Big confetti for completing a goal
+- [ ] Filter for completed todos
+- [ ] After Form.reset() the labels stay at the top of the input
 
 ### Third Release
 
