@@ -1,8 +1,99 @@
-import { isBefore } from 'date-fns';
 import { v4 } from 'uuid';
 
 import { date } from './date';
 import { error } from './error';
+
+// class GoalDayT {
+//   constructor(
+//     public count: number,
+//     public date: string,
+//     public status: GoalDayStatus,
+//     public isBought: boolean,
+//     public note?: string,
+//   ) {}
+
+//   static create(count: number, dateValue: string) {
+//     const normalizedDate = date.startOfDay(dateValue);
+//     const today = date.startOfDay(new Date());
+//     let status: GoalDayStatus;
+//     if (date.isBefore(normalizedDate, today)) {
+//       status = GoalDayStatus.Error;
+//     } else if (date.isToday(normalizedDate)) {
+//       status = GoalDayStatus.PendingToday;
+//     } else {
+//       status = GoalDayStatus.Pending;
+//     }
+//     return new GoalDayT(count, dateValue, status, false, undefined);
+//   }
+
+//   get isYesterday() {
+//     return date.isYesterday(date.startOfDay(date.toDate(this.date)));
+//   }
+
+//   get isToday() {
+//     return date.isToday(date.startOfDay(date.toDate(this.date)));
+//   }
+
+//   complete(todayDay: GoalDayT, isBought: boolean, note?: string) {
+//     if (!this.isToday && !this.isYesterday) {
+//       throw new error.BusinessError(`Cannot complete day ${this.count}`, 'You can only complete today or yesterday.');
+//     }
+//     if (this.status !== GoalDayStatus.PendingToday && this.status !== GoalDayStatus.Error) {
+//       throw new error.BusinessError(`Cannot complete day ${this.count}`);
+//     }
+//     this.ensureCanCompleteYesterday(todayDay);
+//     this.status = GoalDayStatus.Success;
+//     this.isBought = isBought;
+//     this.note = note;
+//   }
+
+//   ensureCanCompleteYesterday(todayDay: GoalDayT) {
+//     if (this.isYesterdayError() && todayDay.status === GoalDayStatus.Success) {
+//       throw new error.BusinessError("Today's day is already completed");
+//     }
+//   }
+
+//   ensureCanCompleteToday() {
+//     if (!this.isToday) throw new error.BusinessError('This is not today');
+//     if (this.status === GoalDayStatus.Success) throw new BusinessError('Day is already completed');
+//     if (this.status !== GoalDayStatus.PendingToday) throw new BusinessError('Something wrong happened');
+//   }
+
+//   isYesterdayError() {
+//     return this.status === GoalDayStatus.Error && this.isYesterday;
+//   }
+
+//   shouldReadOnly() {
+//     return (this.status === GoalDayStatus.Error && !this.isYesterday) || this.status === GoalDayStatus.Success;
+//   }
+// }
+
+// export class GoalT {
+//   constructor(
+//     public id: string,
+//     public description: string,
+//     public useCoins: boolean,
+//     public coins: number | undefined,
+//     public days: GoalDayT[],
+//   ) {}
+
+//   static create(id: string, description: string, useCoins: boolean, coins: number | undefined, daysNum: number) {
+//     const dateGoal = date.startOfDay(new Date());
+//     const days = Array.from({ length: daysNum }, (_, index) => {
+//       const currentDate = date.addDays(dateGoal, index);
+//       return GoalDayT.create(index + 1, date.formatISO(currentDate));
+//     });
+//     return new GoalT(id, description, useCoins, coins, days);
+//   }
+
+//   completeGoalDay(_day: GoalDayT, isBought: boolean, note?: string) {
+//     const day = this.days.find(d => d.date === _day.date);
+//     if (!day) throw new error.BusinessError('The day was not found');
+//     const today = this.days.find(d => d.isToday);
+//     if (!today) throw new error.BusinessError('The day was not found');
+//     day.complete(today, isBought, note);
+//   }
+// }
 
 type ValueOf<T> = T[keyof T];
 
@@ -47,7 +138,7 @@ export interface CreateGoalDTO {
 export function getGoalDayStatus(dateValue: Date): GoalDayStatus {
   const normalizedDate = date.startOfDay(dateValue);
   const today = date.startOfDay(new Date());
-  if (isBefore(normalizedDate, today)) {
+  if (date.isBefore(normalizedDate, today)) {
     return GoalDayStatus.Error;
   } else if (date.isToday(normalizedDate)) {
     return GoalDayStatus.PendingToday;

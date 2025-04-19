@@ -11,6 +11,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "test:cov": "jest --watchAll --coverage",
     "eject": "expo eject"
   },
   "dependencies": {
@@ -54,10 +57,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@types/jest": "^29.5.14",
     "@types/react": "18.3.12",
     "babel-plugin-react-compiler": "^19.0.0-beta-e1e972c-20250221",
     "eslint": "^9.20.0",
     "eslint-config-goals": "*",
+    "jest": "~29.7.0",
+    "jest-expo": "~52.0.6",
     "react-compiler-runtime": "^19.0.0-beta-e1e972c-20250221",
     "typescript": "^5.5.4"
   }

@@ -4,11 +4,13 @@
   "compilerOptions": {
     "allowJs": true,
     "jsx": "react",
-    "lib": ["DOM", "ESNext"],
     "noEmit": true,
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "resolvePackageJsonImports": false,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true,
-    "module": "Node16",
-    "moduleResolution": "node16",
     "target": "ESNext"
   }
 }

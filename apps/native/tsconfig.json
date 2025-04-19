@@ -9,6 +9,8 @@
     "skipLibCheck": true,
     "paths": {
       "~/app/*": ["./src/*"],
+      "~/tests/*": ["./src/__tests__/*"],
+      "~/mocks/*": ["./src/__mocks__/*"],
       "~/assets/*": ["./assets/*"]
     }
   },
