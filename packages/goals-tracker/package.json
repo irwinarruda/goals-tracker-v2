@@ -2,46 +2,47 @@
   "name": "goals-tracker",
   "version": "0.0.0",
   "main": "./dist/native.js",
-  "types": "./dist/native.d.js",
+  "types": "./dist/native.d.ts",
+  "type": "module",
   "exports": {
     "./logic": {
       "import": {
-        "types": "./dist/logic.d.mjs",
-        "default": "./dist/logic.mjs"
+        "types": "./dist/logic.d.ts",
+        "default": "./dist/logic.js"
       },
       "require": {
-        "types": "./dist/logic.d.js",
-        "default": "./dist/logic.js"
+        "types": "./dist/logic.d.cts",
+        "default": "./dist/logic.cjs"
       }
     },
     "./native": {
       "import": {
-        "types": "./dist/native.d.mjs",
-        "default": "./dist/native.mjs"
+        "types": "./dist/native.d.ts",
+        "default": "./dist/native.js"
       },
       "require": {
-        "types": "./dist/native.d.js",
-        "default": "./dist/native.js"
+        "types": "./dist/native.d.cts",
+        "default": "./dist/native.cjs"
       }
     },
     "./tokens": {
       "import": {
-        "types": "./dist/tokens.d.mjs",
-        "default": "./dist/tokens.mjs"
+        "types": "./dist/tokens.d.ts",
+        "default": "./dist/tokens.js"
       },
       "require": {
-        "types": "./dist/tokens.d.js",
-        "default": "./dist/tokens.js"
+        "types": "./dist/tokens.d.cts",
+        "default": "./dist/tokens.cjs"
       }
     },
     "./web": {
       "import": {
-        "types": "./dist/web.d.mjs",
-        "default": "./dist/web.mjs"
+        "types": "./dist/web.d.ts",
+        "default": "./dist/web.js"
       },
       "require": {
-        "types": "./dist/web.d.js",
-        "default": "./dist/web.js"
+        "types": "./dist/web.d.cts",
+        "default": "./dist/web.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -51,15 +52,20 @@
     "dev": "tsup --watch",
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .turbo",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest --coverage"
   },
   "devDependencies": {
     "@types/react": "18.3.12",
+    "@vitest/coverage-v8": "3.1.1",
     "eslint": "^9.21.0",
     "eslint-config-goals": "*",
     "tsup": "^8.0.1",
     "typescript": "5.5.4",
-    "typescript-config": "*"
+    "typescript-config": "*",
+    "vitest": "^3.1.1"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^7.2.0",

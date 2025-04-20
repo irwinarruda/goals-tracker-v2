@@ -159,10 +159,10 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   },
   async completeTodayGoalWithCoins() {
     const { selectedGoal, canUseCoins, coins, goals, persist, fireAlert, fireConfetti, openConfirmDay } = get();
-    if (!selectedGoal) throw new error.DeveloperError('No goal selected');
+    if (!selectedGoal) throw new error.UserError('No goal selected');
     const today = date.formatISO(date.startOfDay(new Date()));
     const todayDay = selectedGoal.days.find(day => day.date === today);
-    if (!todayDay) throw new error.DeveloperError('Today not found');
+    if (!todayDay) throw new error.UserError('Today not found');
     if (todayDay.status === GoalDayStatus.Success) throw new error.UserError("Today's goal is already completed");
     if (!canUseCoins)
       throw new error.UserError('Not enough coins', `You need ${selectedGoal.coins} coins to complete this goal.`);

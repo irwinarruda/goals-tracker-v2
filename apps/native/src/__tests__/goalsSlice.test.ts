@@ -6,7 +6,7 @@ import { getApp } from '~/mocks/getApp';
 function getCreateGoal() {
   return {
     description: 'Test Goal',
-    date: date.formatISO(date.startOfDay(new Date())),
+    date: date.formatISO(date.today()),
     coins: 10,
     useCoins: true,
     days: 30,
@@ -188,8 +188,7 @@ describe('goalsSlice.changeGoalDay', () => {
   test('should view and close error goal day details', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 2);
+    const backDate = date.subDays(date.today(), 2);
     createGoalDTO.date = date.formatISO(backDate);
     await app.state.createGoal(createGoalDTO);
     const day = app.state.selectedGoal!.days[0];
@@ -202,8 +201,7 @@ describe('goalsSlice.changeGoalDay', () => {
   test('should not change goal status if is yesterday error and canceled the alert', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 1);
+    const backDate = date.subDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(backDate);
     await app.state.createGoal(createGoalDTO);
     const day = app.state.selectedGoal!.days[0];
@@ -215,8 +213,7 @@ describe('goalsSlice.changeGoalDay', () => {
   test('should not change goal status if is yesterday error and confirmConfirmDay is canceled', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 1);
+    const backDate = date.subDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(backDate);
     await app.state.createGoal(createGoalDTO);
     const day = app.state.selectedGoal!.days[0];
@@ -229,8 +226,7 @@ describe('goalsSlice.changeGoalDay', () => {
   test('should change goal status if is yesterday error', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 1);
+    const backDate = date.subDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(backDate);
     await app.state.createGoal(createGoalDTO);
     const day = app.state.selectedGoal!.days[0];
@@ -248,16 +244,15 @@ describe('goalsSlice.completeTodayGoalWithCoins', () => {
   test('should not complete today without any goals', async () => {
     const app = getApp();
     expect(app.state.selectedGoalId).toBeUndefined();
-    await expect(() => app.state.completeTodayGoalWithCoins()).rejects.toThrow(error.DeveloperError);
+    await expect(() => app.state.completeTodayGoalWithCoins()).rejects.toThrow(error.UserError);
   });
   test('should not complete today if today is not found', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const forwardDate = date.toDate(createGoalDTO.date);
-    forwardDate.setDate(forwardDate.getDate() + 1);
+    const forwardDate = date.addDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(forwardDate);
     await app.state.createGoal(createGoalDTO);
-    await expect(() => app.state.completeTodayGoalWithCoins()).rejects.toThrow(error.DeveloperError);
+    await expect(() => app.state.completeTodayGoalWithCoins()).rejects.toThrow(error.UserError);
   });
   test('should not complete today if it is already completed', async () => {
     const app = getApp();
@@ -278,8 +273,7 @@ describe('goalsSlice.completeTodayGoalWithCoins', () => {
   test('should not complete today if no alert confirmed', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 1);
+    const backDate = date.subDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(backDate);
     createGoalDTO.coins = 1;
     await app.state.createGoal(createGoalDTO);
@@ -294,8 +288,7 @@ describe('goalsSlice.completeTodayGoalWithCoins', () => {
   test('should not complete today if no confirmModal confirmed', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 1);
+    const backDate = date.subDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(backDate);
     createGoalDTO.coins = 1;
     await app.state.createGoal(createGoalDTO);
@@ -311,8 +304,7 @@ describe('goalsSlice.completeTodayGoalWithCoins', () => {
   test('should complete today', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
-    const backDate = date.toDate(createGoalDTO.date);
-    backDate.setDate(backDate.getDate() - 1);
+    const backDate = date.subDays(date.today(), 1);
     createGoalDTO.date = date.formatISO(backDate);
     createGoalDTO.coins = 1;
     await app.state.createGoal(createGoalDTO);

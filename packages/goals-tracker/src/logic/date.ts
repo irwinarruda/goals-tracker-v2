@@ -10,6 +10,9 @@ export const date = {
   format,
   addDays,
   subDays,
+  today() {
+    return startOfDay(new Date());
+  },
   normalizeTZ(date: Date) {
     const dtDateOnly = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
     return dtDateOnly;
@@ -29,5 +32,8 @@ export const date = {
   },
   formatISO(date: Date) {
     return format(date, 'yyyy-MM-dd');
+  },
+  parseStartOfDayISO(date: string) {
+    return startOfDay(parseISO(date));
   },
 };

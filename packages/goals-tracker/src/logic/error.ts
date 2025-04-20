@@ -3,7 +3,7 @@ export class BusinessError extends Error {
   description?: string;
 
   constructor(title: string, description?: string) {
-    super(title + ': ' + description);
+    super(title + (description ? ': ' + description : ''));
     this.title = title;
     this.description = description;
     this.name = 'BusinessError';
