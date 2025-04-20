@@ -4,7 +4,7 @@ import { computed } from 'zustand-computed-state';
 import { AlertSlice, alertSlice } from './alertSlice';
 import { ConfettiSlice, confettiSlice } from './confettiSlice';
 import { ConfirmDaySlice, confirmDaySlice } from './confirmDaySlice';
-import { GoalsSlice, goalsSlice } from './goalsSlice';
+import { GoalsSlice, goalsSlice } from './goalsTSlice';
 
 export type AppSlices = GoalsSlice & AlertSlice & ConfirmDaySlice & ConfettiSlice;
 

@@ -141,6 +141,14 @@ export class GoalDayT {
       note: this.note,
     };
   }
+
+  /**
+   * Creates a goal day from JSON data
+   * @param json - The JSON data to create the goal day from
+   **/
+  static fromJSON(json: any) {
+    return new GoalDayT(json.id, json.count, json.date, json.status, json.isBought, json.note);
+  }
 }
 
 export class GoalT {
@@ -227,6 +235,17 @@ export class GoalT {
       coins: this.coins,
       days: this.days.map(day => day.toJSON()),
     };
+  }
+
+  /**
+   * Creates a goal from JSON data
+   * @param json - The JSON data to create the goal from
+   **/
+  static fromJSON(json: any) {
+    const days = json.days.map((day: any) => {
+      return GoalDayT.fromJSON(day);
+    });
+    return new GoalT(json.id, json.description, json.useCoins, json.coins, days);
   }
 }
 
