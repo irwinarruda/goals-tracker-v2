@@ -6,44 +6,20 @@
   "type": "module",
   "exports": {
     "./logic": {
-      "import": {
-        "types": "./dist/logic.d.ts",
-        "default": "./dist/logic.js"
-      },
-      "require": {
-        "types": "./dist/logic.d.cts",
-        "default": "./dist/logic.cjs"
-      }
+      "types": "./dist/logic.d.ts",
+      "default": "./dist/logic.js"
     },
     "./native": {
-      "import": {
-        "types": "./dist/native.d.ts",
-        "default": "./dist/native.js"
-      },
-      "require": {
-        "types": "./dist/native.d.cts",
-        "default": "./dist/native.cjs"
-      }
+      "types": "./dist/native.d.ts",
+      "default": "./dist/native.js"
     },
     "./tokens": {
-      "import": {
-        "types": "./dist/tokens.d.ts",
-        "default": "./dist/tokens.js"
-      },
-      "require": {
-        "types": "./dist/tokens.d.cts",
-        "default": "./dist/tokens.cjs"
-      }
+      "types": "./dist/tokens.d.ts",
+      "default": "./dist/tokens.js"
     },
     "./web": {
-      "import": {
-        "types": "./dist/web.d.ts",
-        "default": "./dist/web.js"
-      },
-      "require": {
-        "types": "./dist/web.d.cts",
-        "default": "./dist/web.cjs"
-      }
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.js"
     },
     "./package.json": "./package.json"
   },
