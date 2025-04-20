@@ -1,4 +1,4 @@
-import { date, GoalDayStatus } from 'goals-tracker/logic';
+import { date, GoalDayStatus, GoalDayT } from 'goals-tracker/logic';
 
 import { error } from '~/app/utils/error';
 import { getApp } from '~/mocks/getApp';
@@ -133,14 +133,7 @@ describe('goalsSlice.changeGoalDay', () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
     await app.state.createGoal(createGoalDTO);
-    await expect(() =>
-      app.state.completeGoalDay({
-        count: 20,
-        date: '2023-01-01',
-        status: GoalDayStatus.PendingToday,
-        isBought: false,
-      }),
-    ).rejects.toThrow(error.UserError);
+    await expect(() => app.state.completeGoalDay(GoalDayT.create(20, '2023-01-01'))).rejects.toThrow(error.UserError);
   });
   test('should not change change goal day if confirm day modal is canceled', async () => {
     const app = getApp();
