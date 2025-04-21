@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Image, ImageProps } from 'expo-image';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';

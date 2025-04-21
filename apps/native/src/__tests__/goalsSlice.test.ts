@@ -44,7 +44,7 @@ describe('goalsSlice.createGoal', () => {
     const goal = app.state.goals[1];
     expect(app.state.selectedGoalId).toBe(goal.id);
   });
-  test('shoud be able to open and close create goal widget', async () => {
+  test('should be able to open and close create goal widget', async () => {
     expect(app.state.isCreateGoalOpen).toBe(false);
     app.state.onCreateGoalOpen();
     expect(app.state.isCreateGoalOpen).toBe(true);
@@ -124,12 +124,12 @@ describe('goalsSlice.removeGoal', () => {
 });
 
 describe('goalsSlice.changeGoalDay', () => {
-  test('shoud not complete goal day without any goals', async () => {
+  test('should not complete goal day without any goals', async () => {
     const app = getApp();
     expect(app.state.selectedGoalId).toBeUndefined();
     await expect(() => app.state.completeGoalDay({} as any)).rejects.toThrow(error.DeveloperError);
   });
-  test('shoud not complete goal day if the day does not exist', async () => {
+  test('should not complete goal day if the day does not exist', async () => {
     const app = getApp();
     const createGoalDTO = getCreateGoal();
     await app.state.createGoal(createGoalDTO);
@@ -230,6 +230,13 @@ describe('goalsSlice.changeGoalDay', () => {
     const updatedDay = app.state.selectedGoal!.days[0];
     expect(updatedDay.status).toBe(GoalDayStatus.Success);
     expect(updatedDay.note).toBe('Confirm');
+  });
+  test('should not complete pending goal day', async () => {
+    const app = getApp();
+    const createGoalDTO = getCreateGoal();
+    await app.state.createGoal(createGoalDTO);
+    const day = app.state.selectedGoal!.days[1];
+    await expect(() => app.state.completeGoalDay(day)).rejects.toThrow(error.UserError);
   });
 });
 

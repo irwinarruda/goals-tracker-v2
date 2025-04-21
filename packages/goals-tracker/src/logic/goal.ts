@@ -52,29 +52,6 @@ export class GoalDay {
     return new GoalDay(v4(), count, dateValue, status, false, undefined);
   }
 
-  get isYesterday() {
-    return date.isYesterday(date.parseStartOfDayISO(this.date));
-  }
-
-  get isToday() {
-    return date.isToday(date.parseStartOfDayISO(this.date));
-  }
-
-  /**
-   * Synchronizes the goal day status based on the current date
-   **/
-  sync() {
-    const dayDate = date.parseStartOfDayISO(this.date);
-    if (this.status === GoalDayStatus.Success) return;
-    if (date.isBefore(dayDate, date.today())) {
-      if (this.status !== GoalDayStatus.Error) {
-        this.status = GoalDayStatus.Error;
-      }
-    } else if (date.isToday(dayDate)) {
-      this.status = GoalDayStatus.PendingToday;
-    }
-  }
-
   /**
    * Updates the note of the goal day
    * @param note - The new note
@@ -93,52 +70,71 @@ export class GoalDay {
    * @param note - The new note for the goal day
    **/
   complete(todayDay: GoalDay, isBought: boolean, note?: string) {
-    if (!this.isToday && !this.isYesterday) {
+    if (!this.isToday() && !this.isYesterday()) {
       throw new error.BusinessError(`Cannot complete day ${this.count}`, 'You can only complete today or yesterday.');
     }
     if (this.status !== GoalDayStatus.PendingToday && this.status !== GoalDayStatus.Error) {
       throw new error.BusinessError(`Cannot complete day ${this.count}`);
     }
-    if (isBought && this.isYesterday) {
+    if (this.isYesterday() && isBought) {
       throw new error.BusinessError('Cannot complete yesterday goal with coins');
     }
-    this.ensureCanCompleteYesterday(todayDay);
+    if (this.isYesterday() && todayDay.status !== GoalDayStatus.PendingToday) {
+      throw new error.BusinessError("Today's day is already completed");
+    }
     this.status = GoalDayStatus.Success;
     this.isBought = isBought;
     this.note = note;
   }
 
   /**
-   * Ensures that yesterday's goal day can be completed
-   * @param todayDay - The goal day of today
-   **/
-  ensureCanCompleteYesterday(todayDay: GoalDay) {
-    if (this.isYesterday && todayDay.status !== GoalDayStatus.PendingToday) {
-      throw new error.BusinessError("Today's day is already completed");
-    }
+   * Checks if the goal day is yesterday
+   */
+  isYesterday() {
+    return date.isYesterday(date.parseStartOfDayISO(this.date));
   }
 
   /**
-   * Ensures that the goal day can be completed
-   **/
-  ensureCanCompleteToday() {
-    if (!this.isToday) throw new error.BusinessError('This is not today');
-    if (this.status === GoalDayStatus.Success) throw new error.BusinessError('Day is already completed');
-    if (this.status !== GoalDayStatus.PendingToday) throw new error.BusinessError('Something wrong happened');
+   * Checks if the goal day is today
+   */
+  isToday() {
+    return date.isToday(date.parseStartOfDayISO(this.date));
   }
 
   /**
-   * Ensures that the goal day is yesterday and has error
+   * Checks if the goal day is pending
+   */
+  isPending() {
+    return this.status === GoalDayStatus.Pending;
+  }
+
+  /**
+   * Checks if the it this is yesterday and the status is error
    **/
   isYesterdayError() {
-    return this.status === GoalDayStatus.Error && this.isYesterday;
+    return this.status === GoalDayStatus.Error && this.isYesterday();
   }
 
   /**
    * Check if the current goal has already been completed either by being success or error
    **/
   shouldReadOnly() {
-    return (this.status === GoalDayStatus.Error && !this.isYesterday) || this.status === GoalDayStatus.Success;
+    return (this.status === GoalDayStatus.Error && !this.isYesterday()) || this.status === GoalDayStatus.Success;
+  }
+
+  /**
+   * Synchronizes the goal day status based on the current date
+   **/
+  sync() {
+    const dayDate = date.parseStartOfDayISO(this.date);
+    if (this.status === GoalDayStatus.Success) return;
+    if (date.isBefore(dayDate, date.today())) {
+      if (this.status !== GoalDayStatus.Error) {
+        this.status = GoalDayStatus.Error;
+      }
+    } else if (date.isToday(dayDate)) {
+      this.status = GoalDayStatus.PendingToday;
+    }
   }
 
   /**
@@ -217,7 +213,7 @@ export class Goal {
   completeGoalDay(goalDate: string, isBought: boolean, note?: string) {
     const day = this.days.find(d => d.date === goalDate);
     if (!day) throw new error.BusinessError('The day was not found');
-    const today = this.days.find(d => d.isToday);
+    const today = this.days.find(d => d.isToday());
     if (!today) throw new error.BusinessError('The day was not found');
     day.complete(today, isBought, note);
   }
@@ -245,14 +241,6 @@ export class Goal {
   }
 
   /**
-   * Clones the goal instance
-   * @param goals - List of goals for the operation
-   **/
-  static arrayClone(goals: Goal[]) {
-    return goals.map(goal => goal.clone());
-  }
-
-  /**
    * Converts the goal to JSON format
    **/
   toJSON() {
@@ -266,22 +254,6 @@ export class Goal {
   }
 
   /**
-   * Arranges the goal days to JSON format
-   * @param goals - List of goals for the operation
-   **/
-  static arrayToJSON(goals: Goal[]) {
-    return goals.map(goal => goal.toJSON());
-  }
-
-  /**
-   * Arranges the goal days to JSON format
-   * @param goals - List of goals for the operation
-   **/
-  static arrayFromJSON(goals: any[]): Goal[] {
-    return goals.map((goal: any) => this.fromJSON(goal));
-  }
-
-  /**
    * Creates a goal from JSON data
    * @param json - The JSON data to create the goal from
    **/
@@ -290,5 +262,29 @@ export class Goal {
       return GoalDay.fromJSON(day);
     });
     return new Goal(json.id, json.description, json.useCoins, json.coins, days);
+  }
+
+  /**
+   * Clones a list of goals
+   * @param goals - List of goals for the operation
+   **/
+  static arrayClone(goals: Goal[]) {
+    return goals.map(goal => goal.clone());
+  }
+
+  /**
+   * Arranges a list of goals to JSON
+   * @param goals - List of goals for the operation
+   **/
+  static arrayToJSON(goals: Goal[]) {
+    return goals.map(goal => goal.toJSON());
+  }
+
+  /**
+   * Returns a list of goals from JSON
+   * @param goals - List of goals for the operation
+   **/
+  static arrayFromJSON(goals: any[]) {
+    return goals.map((goal: any) => this.fromJSON(goal));
   }
 }

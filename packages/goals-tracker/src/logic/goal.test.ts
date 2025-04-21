@@ -234,7 +234,7 @@ describe('goal', () => {
     const clonedArray = Goal.arrayClone([goal]);
     expect(clonedArray).toHaveLength(1);
     expect(clonedArray[0].id).toBe(goal.id);
-    expect(clonedArray[0]).not.toBe(goal); // Ensure it's a deep clone
+    expect(clonedArray[0]).not.toBe(goal);
   });
 
   test('should return correct arrayFromJSON', () => {

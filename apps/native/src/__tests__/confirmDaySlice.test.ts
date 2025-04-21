@@ -1,4 +1,4 @@
-import { GoalDayStatus } from 'goals-tracker/logic';
+import { GoalDay } from 'goals-tracker/logic';
 
 import { getApp } from '~/mocks/getApp';
 
@@ -11,13 +11,7 @@ describe('confirmDaySlice', () => {
     }, 10);
     await app.state.openConfirmDay({
       isBought: false,
-      goalDay: {
-        date: new Date().toISOString().split('T')[0],
-        isBought: false,
-        count: 0,
-        status: GoalDayStatus.Pending,
-        note: 'Confirmed',
-      },
+      goalDay: GoalDay.create(0, new Date().toISOString().split('T')[0]),
     });
     expect(app.state.isConfirmDayOpen).toBe(false);
   });
@@ -28,13 +22,7 @@ describe('confirmDaySlice', () => {
     }, 10);
     await app.state.openConfirmDay({
       isBought: false,
-      goalDay: {
-        date: new Date().toISOString().split('T')[0],
-        isBought: false,
-        count: 0,
-        status: GoalDayStatus.Pending,
-        note: 'Confirmed',
-      },
+      goalDay: GoalDay.create(0, new Date().toISOString().split('T')[0]),
     });
     expect(app.state.isConfirmDayOpen).toBe(false);
   });

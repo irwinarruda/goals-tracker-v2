@@ -59,7 +59,7 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     let viewGoalDay = undefined;
 
     if (selectedGoal) {
-      const todayDay = selectedGoal.days.find(day => day.isToday);
+      const todayDay = selectedGoal.days.find(day => day.isToday());
       if (todayDay && todayDay.status === GoalDayStatus.PendingToday)
         canUseCoins = selectedGoal.useCoins && state.coins >= selectedGoal.coins!;
       else canUseCoins = false;
@@ -112,12 +112,17 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
   async completeGoalDay(goalDay) {
     const { selectedGoal, goals, coins, persist, fireAlert, fireConfetti, openConfirmDay, onViewDayOpen } = get();
     if (!selectedGoal) throw new error.DeveloperError('No goal selected');
-    const selectedDay = selectedGoal.days.find(day => day.date === goalDay.date);
+    const selectedDay = selectedGoal.days.find(day => day.id === goalDay.id);
     if (!selectedDay) throw new error.UserError('The day was not found');
-    if (selectedDay.status === GoalDayStatus.Pending) return;
     if (selectedDay.shouldReadOnly()) {
-      onViewDayOpen(goalDay);
+      onViewDayOpen(selectedDay);
       return;
+    }
+    if (selectedDay.isPending()) {
+      throw new error.UserError(
+        `Cannot complete day ${selectedDay.count}`,
+        'You can only complete today or yesterday.',
+      );
     }
     if (selectedDay.isYesterdayError()) {
       const completed = await fireAlert({
