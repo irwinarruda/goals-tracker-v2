@@ -163,7 +163,9 @@ export class GoalDay {
    * @param json - The JSON data to create the goal day from
    **/
   static fromJSON(json: any) {
-    return new GoalDay(json.id, json.count, json.date, json.status, json.isBought, json.note);
+    // This is just because GoalDay did not have an ID before
+    const id = json.id || v4();
+    return new GoalDay(id, json.count, json.date, json.status, json.isBought, json.note);
   }
 }
 
@@ -285,6 +287,10 @@ export class Goal {
    * @param goals - List of goals for the operation
    **/
   static arrayFromJSON(goals: any[]) {
-    return goals.map((goal: any) => this.fromJSON(goal));
+    return goals.map((g: any) => {
+      const goal = this.fromJSON(g);
+      goal.syncDays();
+      return goal;
+    });
   }
 }

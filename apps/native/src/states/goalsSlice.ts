@@ -42,7 +42,11 @@ export const goalsSlice: AppState<GoalsSlice> = (set, get) => ({
     const { persist } = get();
     const data = await storage.get<GoalsSlice>('goalsSlice');
     if (!data) return;
-    set({ goals: Goal.arrayFromJSON(data.goals), coins: data.coins, selectedGoalId: data.selectedGoalId });
+    set({
+      goals: Goal.arrayFromJSON(data.goals),
+      coins: data.coins,
+      selectedGoalId: data.selectedGoalId,
+    });
     await persist();
   },
   async persist() {

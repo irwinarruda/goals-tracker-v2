@@ -350,6 +350,18 @@ describe('goalsSlice.others', () => {
     expect(async () => await app.state.sync()).not.toThrow();
     expect(app.state.goals.length).toBe(0);
   });
+  test('should sync goal days from a goal', async () => {
+    const app = getApp();
+    const createGoalDTO = getCreateGoal();
+    await app.state.createGoal(createGoalDTO);
+    expect(app.state.selectedGoal!.days[0].status).toBe(GoalDayStatus.PendingToday);
+    jest.useFakeTimers();
+    jest.setSystemTime(date.addDays(date.today(), 1));
+    expect(app.state.selectedGoal!.days[0].status).toBe(GoalDayStatus.PendingToday);
+    await app.state.sync();
+    expect(app.state.selectedGoal!.days[0].status).toBe(GoalDayStatus.Error);
+    jest.useRealTimers();
+  });
   test('should not be able to open change goal without goal selected', async () => {
     const app = getApp();
     expect(() => app.state.onChangeGoalOpen()).toThrow(error.UserError);
