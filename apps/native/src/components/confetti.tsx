@@ -17,7 +17,7 @@ export function Confetti({ origin = { x: -10, y: 0 } }: ConfettiProps) {
     <ConfettiCannon
       count={200}
       explosionSpeed={250}
-      fallSpeed={1000}
+      fallSpeed={1200}
       origin={origin}
       ref={confettiRef}
       fadeOut

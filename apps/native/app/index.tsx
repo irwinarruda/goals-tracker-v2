@@ -24,7 +24,7 @@ export default function Native() {
       <View className="flex-1 items-center justify-start p-4">
         <Image source={require('~/assets/not-found.svg')} style={{ marginTop: 30, width: 280, height: 280 }} />
         <Text className="text-md w-[300] text-center font-normal text-blue-700">
-          Nenhuma meta não definida, clique no botão + para adicionar
+          No goal found, click the + button to add a new goal
         </Text>
         <FAB source={require('~/assets/plus.svg')} onPress={onGoalOpen} />
       </View>

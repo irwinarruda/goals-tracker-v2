@@ -37,7 +37,7 @@ function HeaderRight() {
 export function Header({ options, back, route }: NativeStackHeaderProps) {
   const onChangeGoalOpen = useAppState(state => state.onChangeGoalOpen);
   const selectedGoal = useAppState(state => state.selectedGoal);
-  const goalDescription = selectedGoal?.description ?? 'Alique no botão + para adicionar um goal';
+  const goalDescription = selectedGoal?.description ?? 'Click in + to add a new goal';
 
   return (
     <>
