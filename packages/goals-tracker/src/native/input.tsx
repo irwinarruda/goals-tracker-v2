@@ -95,7 +95,10 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
     }
 
     useEffect(() => {
-      if (!focus && props.value) moveLabelUp();
+      if (!focus) {
+        if (props.value) moveLabelUp();
+        else moveLabelDown();
+      }
     }, [props.value]);
 
     return (

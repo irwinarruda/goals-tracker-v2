@@ -90,11 +90,11 @@ The app follows an MVVM-like architecture inspired by Domain-Driven Design (DDD)
 
 **Bugs**
 
-- [ ] Date input first date change is wrong
+- [x] Date input first date change is wrong
 - [x] Reduce confetti speed
 - [ ] Big confetti for completing a goal
 - [ ] Filter for completed todos
-- [ ] After Form.reset() the labels stay at the top of the input
+- [x] After Form.reset() the labels stay at the top of the input
 
 ### Third Release
 

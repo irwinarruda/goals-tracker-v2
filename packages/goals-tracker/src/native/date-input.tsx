@@ -3,6 +3,7 @@ import { TextInput } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Path, Svg } from 'react-native-svg';
 
+import { date as _date } from '../logic';
 import { colors } from '../tokens';
 import { IconButton } from './icon-button';
 import { Input, InputProps } from './input';
@@ -20,27 +21,23 @@ function CalendarIcon({ color }: { color?: string }) {
 }
 
 function formatDateToDisplay(isoDateString?: string) {
-  if (!isoDateString) return '';
   try {
-    const date = new Date(isoDateString);
-    if (isNaN(date.getTime())) return '';
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    if (!isoDateString) return '';
+    const date = _date.parseStartOfDayISO(isoDateString);
+    return _date.format(date, 'dd/MM/yyyy');
   } catch {
     return '';
   }
 }
 
 function parseDisplayToIsoDate(displayDateString?: string) {
-  if (!displayDateString) return '';
-  const parts = displayDateString.split('/');
-  if (parts.length !== 3) return '';
-  const day = parts[0];
-  const month = parts[1];
-  const year = parts[2];
   try {
+    if (!displayDateString) return '';
+    const parts = displayDateString.split('/');
+    if (parts.length !== 3) return '';
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
     const strDate = `${year}-${month}-${day}`;
     const date = new Date(strDate);
     if (isNaN(date.getTime())) return '';
@@ -64,6 +61,7 @@ export const DateInput = forwardRef<React.ElementRef<typeof TextInput>, DateInpu
   function onDateChange(date?: Date) {
     setShowDatePicker(false);
     if (!date) return;
+    date = _date.startOfDay(date);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
