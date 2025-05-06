@@ -11,7 +11,7 @@ import { Button, useTheme } from 'goals-tracker/native';
 import { colors } from 'goals-tracker/tokens';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { StyleSheet } from 'react-native';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import * as v from 'valibot';
@@ -71,12 +71,14 @@ export function ViewDay() {
       enablePanDownToClose
       onClose={onViewDayClose}
     >
-      <BottomSheetView
-        className="flex-1 items-stretch py-4 dark:bg-blue-900"
-        style={{ paddingHorizontal: config.screenPadding }}
-      >
-        {selectedGoal && viewGoalDay && <ViewDayModal selectedGoal={selectedGoal} viewGoalDay={viewGoalDay} />}
-      </BottomSheetView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <BottomSheetView
+          className="flex-1 items-stretch py-4 dark:bg-blue-900"
+          style={{ paddingHorizontal: config.screenPadding }}
+        >
+          {selectedGoal && viewGoalDay && <ViewDayModal selectedGoal={selectedGoal} viewGoalDay={viewGoalDay} />}
+        </BottomSheetView>
+      </TouchableWithoutFeedback>
     </BottomSheet>
   );
 }
@@ -143,20 +145,12 @@ function ViewDayModal({ selectedGoal, viewGoalDay }: { selectedGoal: Goal; viewG
 
   return (
     <>
-      <Text className="text-2xl text-black dark:text-white">View Day</Text>
-      <Divider />
-      <View className="flex-row">
-        <View className="flex-1 pr-3">
-          <View className="flex-1 justify-center rounded-lg bg-blue-500 px-2 py-0">
-            <Text className="text-md font-bold text-white" ellipsizeMode="tail" numberOfLines={1}>
-              {selectedGoal.description}
-            </Text>
-            <Text className="mt-px text-sm text-white">
-              Started on {date.getDayMonthYear(date.toDate(selectedGoal.days[0].date))}
-            </Text>
-          </View>
+      <View className="flex-row items-center justify-between">
+        <Text className="text-2xl text-black dark:text-white">View Day</Text>
+        <View className="flex-row items-center justify-end gap-2">
+          <ViewDayGoal goal={selectedGoal} />
+          <ViewDayUI goalDay={viewGoalDay} />
         </View>
-        <ViewDayUI goalDay={viewGoalDay} />
       </View>
       <Divider />
       {viewGoalDay.note ? (
@@ -217,6 +211,17 @@ function ViewDayUI({ goalDay }: { goalDay: GoalDay }) {
           </Text>
         </View>
       </View>
+    </View>
+  );
+}
+
+function ViewDayGoal({ goal }: { goal: Goal }) {
+  return (
+    <View className="w-40 justify-center rounded-lg bg-blue-500 px-2 py-2">
+      <Text className="text-md font-bold text-white" ellipsizeMode="tail" numberOfLines={1}>
+        {goal.description}
+      </Text>
+      <Text className="text-xs text-white">Started {date.getDayMonthYear(date.toDate(goal.days[0].date))}</Text>
     </View>
   );
 }

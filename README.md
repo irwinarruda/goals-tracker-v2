@@ -95,6 +95,8 @@ The app follows an MVVM-like architecture inspired by Domain-Driven Design (DDD)
 - [ ] Big confetti for completing a goal
 - [ ] Filter for completed todos
 - [x] After Form.reset() the labels stay at the top of the input
+- [x] On Android, input label tap does not work
+- [x] KeyboardAvoidingView breaking scroll behaviour
 
 ### Third Release
 

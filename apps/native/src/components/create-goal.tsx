@@ -4,7 +4,7 @@ import { Button, useTheme } from 'goals-tracker/native';
 import { colors } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { Text, View } from 'react-native';
+import { Keyboard, Text, TouchableWithoutFeedback, View } from 'react-native';
 import * as v from 'valibot';
 
 import { useFormTrigger } from '~/app/providers/form-trigger';
@@ -107,54 +107,56 @@ export function CreateGoal() {
       enablePanDownToClose
       onClose={onClose}
     >
-      <BottomSheetView
-        className="flex-1 items-stretch py-4 dark:bg-blue-900"
-        style={{ paddingHorizontal: config.screenPadding }}
-      >
-        <Text className="text-2xl text-black dark:text-white">Create Goal</Text>
-        <View className="pt-5" />
-        <FormInput control={control} label="Description" name="description" placeholder="Enter a goal description" />
-        <View className="flex-row gap-5 pt-5">
-          <FormInput
-            containerStyle={{ flex: 1 }}
-            control={control}
-            keyboardType="numeric"
-            label="Days"
-            maxLength={3}
-            name="days"
-            allowOnlyNumbers
-          />
-          <FormDateInput
-            containerStyle={{ flex: 2 }}
-            control={control}
-            keyboardType="numeric"
-            label="Start date"
-            name="date"
-          />
-        </View>
-        <View className="flex-row items-center gap-5 pt-5">
-          <FormCheckbox
-            containerStyle={{ flex: 3 }}
-            control={control}
-            label="Use coins to complete a the day"
-            name="useCoins"
-          />
-          <FormInput
-            containerStyle={{ flex: 1 }}
-            control={control}
-            editable={useCoins}
-            keyboardType="numeric"
-            label="Coins"
-            maxLength={2}
-            name="coins"
-            allowOnlyNumbers
-          />
-        </View>
-        <View className="pt-5" />
-        <Button enabled={!isSubmitting} onPress={() => error.listenAsync(handleSubmit(onSubmit))()}>
-          Create
-        </Button>
-      </BottomSheetView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <BottomSheetView
+          className="flex-1 items-stretch py-4 dark:bg-blue-900"
+          style={{ paddingHorizontal: config.screenPadding }}
+        >
+          <Text className="text-2xl text-black dark:text-white">Create Goal</Text>
+          <View className="pt-5" />
+          <FormInput control={control} label="Description" name="description" placeholder="Enter a goal description" />
+          <View className="flex-row gap-5 pt-5">
+            <FormInput
+              containerStyle={{ flex: 1 }}
+              control={control}
+              keyboardType="numeric"
+              label="Days"
+              maxLength={3}
+              name="days"
+              allowOnlyNumbers
+            />
+            <FormDateInput
+              containerStyle={{ flex: 2 }}
+              control={control}
+              keyboardType="numeric"
+              label="Start date"
+              name="date"
+            />
+          </View>
+          <View className="flex-row items-center gap-5 pt-5">
+            <FormCheckbox
+              containerStyle={{ flex: 3 }}
+              control={control}
+              label="Use coins to complete a the day"
+              name="useCoins"
+            />
+            <FormInput
+              containerStyle={{ flex: 1 }}
+              control={control}
+              editable={useCoins}
+              keyboardType="numeric"
+              label="Coins"
+              maxLength={2}
+              name="coins"
+              allowOnlyNumbers
+            />
+          </View>
+          <View className="pt-5" />
+          <Button enabled={!isSubmitting} onPress={() => error.listenAsync(handleSubmit(onSubmit))()}>
+            Create
+          </Button>
+        </BottomSheetView>
+      </TouchableWithoutFeedback>
     </BottomSheet>
   );
 }

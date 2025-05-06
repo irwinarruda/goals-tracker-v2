@@ -5,7 +5,7 @@ import { Button, useTheme } from 'goals-tracker/native';
 import { colors } from 'goals-tracker/tokens';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { Text, View } from 'react-native';
+import { Keyboard, Text, TouchableWithoutFeedback, View } from 'react-native';
 import * as v from 'valibot';
 
 import { AppSlices, useAppState } from '~/app/states';
@@ -76,45 +76,47 @@ export function ConfirmDay() {
       enablePanDownToClose
       onClose={error.listen(onClose)}
     >
-      <BottomSheetView
-        className="flex-1 items-stretch py-4 dark:bg-blue-900"
-        style={{ paddingHorizontal: config.screenPadding }}
-      >
-        <View className="flex-row items-center justify-between">
-          <Text className="text-2xl text-black dark:text-white">Confirm Day</Text>
-          <ConfirmData confirmDayData={confirmDayData} />
-        </View>
-        <View className="pt-5" />
-        <FormInput
-          control={control}
-          label="Type in a note for today's goal"
-          name="note"
-          placeholder="Enter your note message"
-          style={{ height: 150 }}
-          textAlignVertical="top"
-          multiline
-        />
-        <View className="pt-5" />
-        <View style={{ flexDirection: 'row', gap: 12 }}>
-          <Button
-            enabled={!isSubmitting}
-            style={{
-              flex: 1,
-              backgroundColor: colors['gray-700'],
-            }}
-            onPress={onConfirmDayCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            enabled={!isSubmitting}
-            style={{ flex: 1 }}
-            onPress={e => error.listenAsync(handleSubmit(onSubmit))()}
-          >
-            Confirm
-          </Button>
-        </View>
-      </BottomSheetView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <BottomSheetView
+          className="flex-1 items-stretch py-4 dark:bg-blue-900"
+          style={{ paddingHorizontal: config.screenPadding }}
+        >
+          <View className="flex-row items-center justify-between">
+            <Text className="text-2xl text-black dark:text-white">Confirm Day</Text>
+            <ConfirmData confirmDayData={confirmDayData} />
+          </View>
+          <View className="pt-5" />
+          <FormInput
+            control={control}
+            label="Type in a note for today's goal"
+            name="note"
+            placeholder="Enter your note message"
+            style={{ height: 150 }}
+            textAlignVertical="top"
+            multiline
+          />
+          <View className="pt-5" />
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <Button
+              enabled={!isSubmitting}
+              style={{
+                flex: 1,
+                backgroundColor: colors['gray-700'],
+              }}
+              onPress={onConfirmDayCancel}
+            >
+              Cancel
+            </Button>
+            <Button
+              enabled={!isSubmitting}
+              style={{ flex: 1 }}
+              onPress={e => error.listenAsync(handleSubmit(onSubmit))()}
+            >
+              Confirm
+            </Button>
+          </View>
+        </BottomSheetView>
+      </TouchableWithoutFeedback>
     </BottomSheet>
   );
 }

@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import {
   NativeSyntheticEvent,
   StyleProp,
@@ -14,6 +14,18 @@ import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { colors, fontSizes, roundeds } from '../tokens';
 import { Theme, useTheme } from './theme';
+
+function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined | null>) {
+  return (instance: T | null) => {
+    refs.forEach(ref => {
+      if (typeof ref === 'function') {
+        ref(instance);
+      } else if (ref != null) {
+        (ref as React.MutableRefObject<T | null>).current = instance;
+      }
+    });
+  };
+}
 
 function maskValue(value: string, mask: string): string {
   let result = '';
@@ -57,6 +69,7 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
   ({ containerStyle, style, maskNumber, allowOnlyNumbers, rightIcon, error, ...props }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
+    const internalRef = useRef<TextInput>(null);
 
     const [focus, setFocus] = useState(false);
     const top = useSharedValue(labelTop);
@@ -94,6 +107,10 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
       moveLabelUp();
     }
 
+    function onLabelPress() {
+      if (internalRef.current) internalRef.current.focus();
+    }
+
     useEffect(() => {
       if (!focus) {
         if (props.value) moveLabelUp();
@@ -103,7 +120,10 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
 
     return (
       <View style={[styles.container, props.editable === false && styles.container_disabled, containerStyle]}>
-        <Animated.Text style={[styles.label_text, { top: top, left: left, transform: [{ scale: scale }] }]}>
+        <Animated.Text
+          style={[styles.label_text, { top: top, left: left, transform: [{ scale: scale }] }]}
+          onPress={onLabelPress}
+        >
           {props.label}
         </Animated.Text>
         <TextInput
@@ -111,7 +131,8 @@ export const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
           maxLength={maskNumber ? maskNumber.length : props.maxLength}
           placeholder={props.label}
           placeholderTextColor={colors['transparent']}
-          ref={ref}
+          // eslint-disable-next-line react-compiler/react-compiler
+          ref={mergeRefs(ref, internalRef)}
           style={[
             styles.input,
             focus && styles.input_focus,
