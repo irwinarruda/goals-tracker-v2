@@ -87,6 +87,7 @@ The app follows an MVVM-like architecture inspired by Domain-Driven Design (DDD)
 - [ ] Better icons for dark theme
 - [ ] Edit goal name
 - [ ] Add the days of the week for the goal
+- [ ] Internationalization
 
 **Bugs**
 
@@ -97,6 +98,11 @@ The app follows an MVVM-like architecture inspired by Domain-Driven Design (DDD)
 - [x] After Form.reset() the labels stay at the top of the input
 - [x] On Android, input label tap does not work
 - [x] KeyboardAvoidingView breaking scroll behaviour
+
+**Infra**
+
+- [ ] Add dependabot
+- [ ] Add GitHub Actions checks
 
 ### Third Release
 
